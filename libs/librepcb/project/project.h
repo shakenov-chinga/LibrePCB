@@ -40,9 +40,7 @@ class QPrinter;
 
 namespace librepcb {
 
-class SmartTextFile;
-class SmartSExprFile;
-class SmartVersionFile;
+class TransactionalFileSystem;
 class StrokeFontPool;
 
 namespace project {
@@ -121,6 +119,13 @@ public:
    * @return The filepath to the project directory
    */
   const FilePath& getPath() const noexcept { return mPath; }
+
+  /**
+   * @brief Get the file system of the project
+   *
+   * @return The project's file system
+   */
+  TransactionalFileSystem& getFileSystem() noexcept { return *mFileSystem; }
 
   /**
    * @brief Check whether this project was opened in read-only mode or not
@@ -494,19 +499,13 @@ private:
   // Project File (*.lpp)
   FilePath mPath;      ///< the path to the project directory
   FilePath mFilepath;  ///< the filepath of the *.lpp project file
-  QScopedPointer<SmartVersionFile>
-                                mVersionFile;  ///< the ".librepcb-project" file
-  QScopedPointer<SmartTextFile> mProjectFile;  ///< the *.lpp project file
+  QScopedPointer<TransactionalFileSystem> mFileSystem;
   DirectoryLock mLock;  ///< Lock for the whole project directory (see @ref
                         ///< doc_project_lock)
   bool mIsRestored;  ///< the constructor will set this to true if the project
                      ///< was restored
   bool mIsReadOnly;  ///< the constructor will set this to true if the project
                      ///< was opened in read only mode
-
-  // schematic and board list files
-  QScopedPointer<SmartSExprFile> mSchematicsFile;  ///< core/schematics.lp
-  QScopedPointer<SmartSExprFile> mBoardsFile;      ///< core/boards.lp
 
   // General
   QScopedPointer<StrokeFontPool>

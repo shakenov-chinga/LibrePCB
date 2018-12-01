@@ -20,7 +20,7 @@
 /*******************************************************************************
  *  Includes
  ******************************************************************************/
-#include "smarttextfile.h"
+#include "versionfile.h"
 
 #include "fileutils.h"
 
@@ -35,36 +35,29 @@ namespace librepcb {
  *  Constructors / Destructor
  ******************************************************************************/
 
-SmartTextFile::SmartTextFile(const FilePath& filepath, bool restore,
-                             bool readOnly, bool create)
-  : SmartFile(filepath, restore, readOnly, create) {
-  if (mIsCreated) {
-    // nothing to do, leave "mContent" empty
-  } else {
-    // read the content of the file
-    mContent = FileUtils::readFile(mOpenedFilePath);
-  }
+VersionFile::VersionFile(const Version& version) noexcept : mVersion(version) {
 }
 
-SmartTextFile::~SmartTextFile() noexcept {
+VersionFile::~VersionFile() noexcept {
 }
 
 /*******************************************************************************
  *  General Methods
  ******************************************************************************/
 
-void SmartTextFile::save(bool toOriginal) {
-  const FilePath& filepath = prepareSaveAndReturnFilePath(toOriginal);
-  FileUtils::writeFile(filepath, mContent);
-  updateMembersAfterSaving(toOriginal);
+QByteArray VersionFile::toByteArray() const noexcept {
+  return QString("%1\n").arg(mVersion.toStr()).toUtf8();
 }
 
 /*******************************************************************************
  *  Static Methods
  ******************************************************************************/
 
-SmartTextFile* SmartTextFile::create(const FilePath& filepath) {
-  return new SmartTextFile(filepath, false, false, true);
+VersionFile VersionFile::fromByteArray(const QByteArray& content) {
+  QList<QByteArray> lines = content.split('\n');
+  Q_ASSERT(lines.count() >= 1);
+  Version version = Version::fromString(lines.first());  // can throw
+  return VersionFile(version);
 }
 
 /*******************************************************************************

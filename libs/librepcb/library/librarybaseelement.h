@@ -40,6 +40,9 @@
  *  Namespace / Forward Declarations
  ******************************************************************************/
 namespace librepcb {
+
+class TransactionalFileSystem;
+
 namespace library {
 
 /*******************************************************************************
@@ -129,11 +132,11 @@ protected:
   virtual void serialize(SExpression& root) const override;
 
   // General Attributes
-  mutable FilePath mDirectory;
-  mutable bool     mDirectoryIsTemporary;
-  bool             mOpenedReadOnly;
-  bool             mDirectoryNameMustBeUuid;
-  QString          mShortElementName;  ///< e.g. "lib", "cmpcat", "sym"
+  mutable FilePath                        mDirectory;
+  bool                                    mOpenedReadOnly;
+  QScopedPointer<TransactionalFileSystem> mFileSystem;
+  bool                                    mDirectoryNameMustBeUuid;
+  QString mShortElementName;  ///< e.g. "lib", "cmpcat", "sym"
   QString mLongElementName;  ///< e.g. "library", "component_category", "symbol"
 
   // Members required for loading elements from file

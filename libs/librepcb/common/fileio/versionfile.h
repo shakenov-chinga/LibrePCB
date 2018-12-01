@@ -17,15 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef LIBREPCB_PROJECT_ERCMSGLIST_H
-#define LIBREPCB_PROJECT_ERCMSGLIST_H
+#ifndef LIBREPCB_VERSIONFILE_H
+#define LIBREPCB_VERSIONFILE_H
 
 /*******************************************************************************
  *  Includes
  ******************************************************************************/
-#include <librepcb/common/exceptions.h>
-#include <librepcb/common/fileio/filepath.h>
-#include <librepcb/common/fileio/serializableobject.h>
+#include "../version.h"
 
 #include <QtCore>
 
@@ -33,64 +31,87 @@
  *  Namespace / Forward Declarations
  ******************************************************************************/
 namespace librepcb {
-namespace project {
-
-class Project;
-class ErcMsg;
 
 /*******************************************************************************
- *  Class ErcMsgList
+ *  Class VersionFile
  ******************************************************************************/
 
 /**
- * @brief The ErcMsgList class contains a list of ERC messages which are visible
- * for the user
+ * @brief The VersionFile class
  */
-class ErcMsgList final : public QObject, public SerializableObject {
-  Q_OBJECT
+class VersionFile final {
+  Q_DECLARE_TR_FUNCTIONS(VersionFile)
 
 public:
   // Constructors / Destructor
-  ErcMsgList()                        = delete;
-  ErcMsgList(const ErcMsgList& other) = delete;
-  explicit ErcMsgList(Project& project);
-  ~ErcMsgList() noexcept;
+  VersionFile()                         = delete;
+  VersionFile(const VersionFile& other) = default;
+
+  /**
+   * @brief The constructor to create a new version file
+   *
+   * @param version   The file version
+   */
+  VersionFile(const Version& version) noexcept;
+
+  /**
+   * Destructor
+   */
+  ~VersionFile() noexcept;
 
   // Getters
-  const QList<ErcMsg*>& getItems() const noexcept { return mItems; }
+
+  /**
+   * @brief Get the content of the file
+   *
+   * @return The version contained in the file
+   */
+  const Version& getVersion() const noexcept { return mVersion; }
+
+  // Setters
+
+  /**
+   * @brief Set the version of the file
+   *
+   * @param version   The new version of the file
+   */
+  void setVersion(const Version& version) noexcept { mVersion = version; }
 
   // General Methods
-  void add(ErcMsg* ercMsg) noexcept;
-  void remove(ErcMsg* ercMsg) noexcept;
-  void update(ErcMsg* ercMsg) noexcept;
-  void restoreIgnoreState();
-  bool save(QStringList& errors) noexcept;
+
+  /**
+   * @brief Export file content as byte array
+   */
+  QByteArray toByteArray() const noexcept;
+
+  /**
+   * @brief Load version file from byte array
+   *
+   * @param content   The raw file content
+   *
+   * @return A new VersionFile object
+   *
+   * @throw Exception if the content is invalid
+   */
+  static VersionFile fromByteArray(const QByteArray& content);
 
   // Operator Overloadings
-  ErcMsgList& operator=(const ErcMsgList& rhs) = delete;
+  VersionFile& operator=(const VersionFile& rhs) = delete;
 
-signals:
+protected:  // Methods
+  static Version readVersionFromFile(const FilePath& filepath);
 
-  void ercMsgAdded(ErcMsg* ercMsg);
-  void ercMsgRemoved(ErcMsg* ercMsg);
-  void ercMsgChanged(ErcMsg* ercMsg);
-
-private:  // Methods
-  /// @copydoc librepcb::SerializableObject::serialize()
-  void serialize(SExpression& root) const override;
-
-  // General
-  Project& mProject;
-
-  // Misc
-  QList<ErcMsg*> mItems;  ///< contains all visible ERC messages
+private:  // Data
+  /**
+   * @brief The version number of the file
+   */
+  Version mVersion;
 };
 
 /*******************************************************************************
  *  End of File
  ******************************************************************************/
 
-}  // namespace project
 }  // namespace librepcb
 
-#endif  // LIBREPCB_PROJECT_ERCMSGLIST_H
+#endif  // LIBREPCB_VERSIONFILE_H

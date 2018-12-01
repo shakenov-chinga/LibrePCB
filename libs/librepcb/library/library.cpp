@@ -31,7 +31,6 @@
 
 #include <librepcb/common/fileio/fileutils.h>
 #include <librepcb/common/fileio/sexpression.h>
-#include <librepcb/common/fileio/smartsexprfile.h>
 #include <librepcb/common/toolbox.h>
 
 #include <QtCore>

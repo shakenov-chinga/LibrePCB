@@ -25,10 +25,9 @@
 #include "librarybaseelementcheck.h"
 
 #include <librepcb/common/application.h>
-#include <librepcb/common/fileio/fileutils.h>
 #include <librepcb/common/fileio/sexpression.h>
-#include <librepcb/common/fileio/smartsexprfile.h>
-#include <librepcb/common/fileio/smartversionfile.h>
+#include <librepcb/common/fileio/transactionalfilesystem.h>
+#include <librepcb/common/fileio/versionfile.h>
 
 #include <QtCore>
 
@@ -48,9 +47,9 @@ LibraryBaseElement::LibraryBaseElement(
     const QString& author, const ElementName& name_en_US,
     const QString& description_en_US, const QString& keywords_en_US)
   : QObject(nullptr),
-    mDirectory(FilePath::getRandomTempPath()),
-    mDirectoryIsTemporary(true),
+    mDirectory(),
     mOpenedReadOnly(false),
+    mFileSystem(new TransactionalFileSystem()),
     mDirectoryNameMustBeUuid(dirnameMustBeUuid),
     mShortElementName(shortElementName),
     mLongElementName(longElementName),
@@ -62,7 +61,6 @@ LibraryBaseElement::LibraryBaseElement(
     mNames(name_en_US),
     mDescriptions(description_en_US),
     mKeywords(keywords_en_US) {
-  FileUtils::makePath(mDirectory);  // can throw
 }
 
 LibraryBaseElement::LibraryBaseElement(const FilePath& elementDirectory,
@@ -72,8 +70,8 @@ LibraryBaseElement::LibraryBaseElement(const FilePath& elementDirectory,
                                        bool            readOnly)
   : QObject(nullptr),
     mDirectory(elementDirectory),
-    mDirectoryIsTemporary(false),
     mOpenedReadOnly(readOnly),
+    mFileSystem(new TransactionalFileSystem()),
     mDirectoryNameMustBeUuid(dirnameMustBeUuid),
     mShortElementName(shortElementName),
     mLongElementName(longElementName),
@@ -85,12 +83,14 @@ LibraryBaseElement::LibraryBaseElement(const FilePath& elementDirectory,
         "unknown")),  // just for initialization, will be overwritten
     mDescriptions(""),
     mKeywords("") {
+  // open the directory
+  mFileSystem->loadFromDirectory(mDirectory);
+
   // determine the filepath to the version file
-  FilePath versionFilePath =
-      mDirectory.getPathTo(".librepcb-" % mShortElementName);
+  QString versionFileName = ".librepcb-" % mShortElementName;
 
   // check if the directory is a library element
-  if (!versionFilePath.isExistingFile()) {
+  if (!mFileSystem->fileExists(versionFileName)) {
     throw RuntimeError(
         __FILE__, __LINE__,
         QString(tr("Directory is not a library element of type %1: \"%2\""))
@@ -106,7 +106,8 @@ LibraryBaseElement::LibraryBaseElement(const FilePath& elementDirectory,
   }
 
   // read version number from version file
-  SmartVersionFile versionFile(versionFilePath, false, true);
+  VersionFile versionFile =
+      VersionFile::fromByteArray(mFileSystem->readBinary(versionFileName));
   if (versionFile.getVersion() > qApp->getAppVersion()) {
     throw RuntimeError(
         __FILE__, __LINE__,
@@ -118,9 +119,9 @@ LibraryBaseElement::LibraryBaseElement(const FilePath& elementDirectory,
   }
 
   // open main file
-  FilePath       sexprFilePath = mDirectory.getPathTo(mLongElementName % ".lp");
-  SmartSExprFile sexprFile(sexprFilePath, false, true);
-  mLoadingFileDocument = sexprFile.parseFileAndBuildDomTree();
+  FilePath sexprFilePath = mDirectory.getPathTo(mLongElementName % ".lp");
+  mLoadingFileDocument   = SExpression::parse(
+      mFileSystem->readText(sexprFilePath.getFilename()), sexprFilePath);
 
   // read attributes
   if (mLoadingFileDocument.getChildByIndex(0).isString()) {
@@ -151,12 +152,6 @@ LibraryBaseElement::LibraryBaseElement(const FilePath& elementDirectory,
 }
 
 LibraryBaseElement::~LibraryBaseElement() noexcept {
-  if (mDirectoryIsTemporary) {
-    if (!QDir(mDirectory.toStr()).removeRecursively()) {
-      qWarning() << "Could not remove temporary directory:"
-                 << mDirectory.toNative();
-    }
-  }
 }
 
 /*******************************************************************************
@@ -191,22 +186,22 @@ void LibraryBaseElement::save() {
   }
 
   // save S-Expressions file
-  FilePath    sexprFilePath = mDirectory.getPathTo(mLongElementName % ".lp");
+  QString     sexprFileName = mLongElementName % ".lp";
   SExpression root(serializeToDomElement("librepcb_" % mLongElementName));
-  QScopedPointer<SmartSExprFile> sexprFile(
-      SmartSExprFile::create(sexprFilePath));
-  sexprFile->save(root, true);
+  mFileSystem->writeText(sexprFileName, root.toString(0));
 
   // save version number file
-  QScopedPointer<SmartVersionFile> versionFile(SmartVersionFile::create(
-      mDirectory.getPathTo(".librepcb-" % mShortElementName),
-      qApp->getFileFormatVersion()));
-  versionFile->save(true);
+  QString     versionFileName = ".librepcb-" % mShortElementName;
+  VersionFile versionFile(qApp->getFileFormatVersion());
+  mFileSystem->writeBinary(versionFileName, versionFile.toByteArray());
+
+  // save whole file system
+  mFileSystem->saveToDirectory(mDirectory);
 }
 
 void LibraryBaseElement::saveTo(const FilePath& destination) {
-  // copy to new directory and remove source directory if it was temporary
-  copyTo(destination, mDirectoryIsTemporary);
+  // copy to new directory
+  copyTo(destination, false);
 }
 
 void LibraryBaseElement::saveIntoParentDirectory(const FilePath& parentDir) {
@@ -245,20 +240,9 @@ void LibraryBaseElement::copyTo(const FilePath& destination,
               .arg(destination.getFilename()));
     }
 
-    // Unfortunately empty directories are sometimes not removed properly, for
-    // example some Git operations remove the contained files but not the parent
-    // directories. But if the destination directory exists already,
-    // FileUtils::copyDirRecursively() would throw an exception because it
-    // requires that the destination does not exist yet. To avoid this issue, we
-    // remove the destination first if it's an empty directory. If it's not
-    // empty, we accept that an exception is thrown because this would likely be
-    // a serious error.
-    if (destination.isEmptyDir()) {
-      FileUtils::removeDirRecursively(destination);
-    }
-
     // check if destination directory exists already
-    if (destination.isExistingDir() || destination.isExistingFile()) {
+    if ((destination.isExistingDir() && (!destination.isEmptyDir())) ||
+        destination.isExistingFile()) {
       throw RuntimeError(
           __FILE__, __LINE__,
           QString(tr("Could not copy "
@@ -268,20 +252,19 @@ void LibraryBaseElement::copyTo(const FilePath& destination,
     }
 
     // copy current directory to destination
-    FileUtils::copyDirRecursively(mDirectory, destination);
+    mFileSystem->saveToDirectory(destination);
 
-    // memorize the current directory
+    // memorize the current directory and change element's directory
     FilePath sourceDir = mDirectory;
 
     // save the library element to the destination directory
-    mDirectory            = destination;
-    mDirectoryIsTemporary = false;
-    mOpenedReadOnly       = false;
+    mDirectory      = destination;
+    mOpenedReadOnly = false;
     save();
 
     // remove source directory if required
     if (removeSource) {
-      FileUtils::removeDirRecursively(sourceDir);
+      // FileUtils::removeDirRecursively(sourceDir);
     }
   } else {
     // no copy action required, just save the element

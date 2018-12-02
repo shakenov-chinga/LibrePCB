@@ -41,12 +41,14 @@ namespace fb = fontobene;
  *  Constructors / Destructor
  ******************************************************************************/
 
-StrokeFont::StrokeFont(const FilePath& fontFilePath) noexcept
-  : QObject(nullptr), mFilePath(fontFilePath) {
+StrokeFont::StrokeFont(const QString& filepath, QString content) noexcept
+  : QObject(nullptr), mFilePath(filepath) {
   // load the font in another thread because it takes some time to load it
-  qDebug() << "Start loading font" << mFilePath.toNative();
-  mFuture = QtConcurrent::run(
-      [fontFilePath]() { return fb::Font(fontFilePath.toStr()); });
+  qDebug() << "Start loading font" << mFilePath;
+  mFuture = QtConcurrent::run([content]() mutable {
+    QTextStream s(&content);
+    return fb::Font(s);
+  });
   connect(&mWatcher, &QFutureWatcher<fb::Font>::finished, this,
           &StrokeFont::fontLoaded);
   mWatcher.setFuture(mFuture);
@@ -204,11 +206,11 @@ const fb::GlyphListAccessor& StrokeFont::accessor() const noexcept {
   if (!mFont) {
     try {
       mFont.reset(new fb::Font(mFuture.result()));  // can throw
-      qDebug() << "Successfully loaded font" << mFilePath.toNative() << "with"
+      qDebug() << "Successfully loaded font" << mFilePath << "with"
                << mFont->glyphs.count() << "glyphs";
     } catch (const fb::Exception& e) {
       mFont.reset(new fb::Font());
-      qCritical() << "Failed to load font" << mFilePath.toNative();
+      qCritical() << "Failed to load font" << mFilePath;
       qCritical() << "Error:" << e.msg();
     }
 

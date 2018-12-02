@@ -17,62 +17,54 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef LIBREPCB_DISKFILESYSTEM_H
+#define LIBREPCB_DISKFILESYSTEM_H
+
 /*******************************************************************************
  *  Includes
  ******************************************************************************/
-#include "strokefontpool.h"
+#include "filepath.h"
+#include "filesystem.h"
 
 #include <QtCore>
 
 /*******************************************************************************
- *  Namespace
+ *  Namespace / Forward Declarations
  ******************************************************************************/
+
 namespace librepcb {
 
 /*******************************************************************************
- *  Constructors / Destructor
+ *  Class DiskFileSystem
  ******************************************************************************/
 
-StrokeFontPool::StrokeFontPool(const FileSystem& filesystem,
-                               const QString&    path) noexcept {
-  try {
-    foreach (const QString& name, filesystem.getFilesInDir(path, {"*.bene"})) {
-      QString filepath = path % "/" % name;
-      QString absPath = filesystem.getPrettyPath(filepath);
-      try {
-        qDebug() << "Load stroke font:" << absPath;
-        mFonts.insert(name, std::make_shared<StrokeFont>(
-                                absPath, filesystem.readText(filepath)));  // can throw
-      } catch (const Exception& e) {
-        qCritical() << "Failed to load stroke font"
-                    << absPath << ":" << e.getMsg();
-      }
-    }
-  } catch (const Exception& e) {
-    qCritical() << "Failed to load stroke font pool:" << e.getMsg();
-  }
-}
+class DiskFileSystem final : public FileSystem {
+  Q_DECLARE_TR_FUNCTIONS(DiskFileSystem)
 
-StrokeFontPool::~StrokeFontPool() noexcept {
-}
+public:
+  // Constructors / Destructor
+  DiskFileSystem()                            = delete;
+  DiskFileSystem(const DiskFileSystem& other) = delete;
+  DiskFileSystem(const FilePath& root) noexcept;
+  ~DiskFileSystem() noexcept;
 
-/*******************************************************************************
- *  Getters
- ******************************************************************************/
+  // File Operations
+  QString     getPrettyPath(const QString& path) const noexcept override;
+  QStringList getFilesInDir(
+      QString dir, const QStringList& filters = QStringList()) const override;
+  bool       fileExists(const QString& path) const noexcept override;
+  QByteArray readBinary(const QString& path) const override;
+  void writeBinary(const QString& path, const QByteArray& content) override;
+  void removeFile(const QString& path) override;
 
-const StrokeFont& StrokeFontPool::getFont(const QString& filename) const {
-  if (mFonts.contains(filename)) {
-    return *mFonts[filename];
-  } else {
-    throw RuntimeError(
-        __FILE__, __LINE__,
-        QString(tr("The font \"%1\" does not exist in the font pool."))
-            .arg(filename));
-  }
-}
+private:
+  FilePath mRoot;
+};
 
 /*******************************************************************************
  *  End of File
  ******************************************************************************/
 
 }  // namespace librepcb
+
+#endif  // LIBREPCB_DISKFILESYSTEM_H

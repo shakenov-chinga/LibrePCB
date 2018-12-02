@@ -20,9 +20,9 @@
 /*******************************************************************************
  *  Includes
  ******************************************************************************/
-#include "strokefontpool.h"
+#include "diskfilesystem.h"
 
-#include <QtCore>
+#include "fileutils.h"
 
 /*******************************************************************************
  *  Namespace
@@ -33,43 +33,55 @@ namespace librepcb {
  *  Constructors / Destructor
  ******************************************************************************/
 
-StrokeFontPool::StrokeFontPool(const FileSystem& filesystem,
-                               const QString&    path) noexcept {
-  try {
-    foreach (const QString& name, filesystem.getFilesInDir(path, {"*.bene"})) {
-      QString filepath = path % "/" % name;
-      QString absPath = filesystem.getPrettyPath(filepath);
-      try {
-        qDebug() << "Load stroke font:" << absPath;
-        mFonts.insert(name, std::make_shared<StrokeFont>(
-                                absPath, filesystem.readText(filepath)));  // can throw
-      } catch (const Exception& e) {
-        qCritical() << "Failed to load stroke font"
-                    << absPath << ":" << e.getMsg();
-      }
-    }
-  } catch (const Exception& e) {
-    qCritical() << "Failed to load stroke font pool:" << e.getMsg();
-  }
+DiskFileSystem::DiskFileSystem(const FilePath& root) noexcept : mRoot(root) {
 }
 
-StrokeFontPool::~StrokeFontPool() noexcept {
+DiskFileSystem::~DiskFileSystem() noexcept {
 }
 
 /*******************************************************************************
- *  Getters
+ *  File Operations
  ******************************************************************************/
 
-const StrokeFont& StrokeFontPool::getFont(const QString& filename) const {
-  if (mFonts.contains(filename)) {
-    return *mFonts[filename];
-  } else {
-    throw RuntimeError(
-        __FILE__, __LINE__,
-        QString(tr("The font \"%1\" does not exist in the font pool."))
-            .arg(filename));
-  }
+QString DiskFileSystem::getPrettyPath(const QString& path) const noexcept {
+  return mRoot.getPathTo(path).toNative();
 }
+
+QStringList DiskFileSystem::getFilesInDir(QString            dir,
+                                          const QStringList& filters) const {
+  QList<FilePath> absPaths =
+      FileUtils::getFilesInDirectory(mRoot.getPathTo(dir), filters);
+  QStringList filenames;
+  foreach (const FilePath& fp, absPaths) {
+    filenames.append(fp.getFilename());
+  }
+  return filenames;
+}
+
+bool DiskFileSystem::fileExists(const QString& path) const noexcept {
+  return mRoot.getPathTo(path).isExistingFile();
+}
+
+QByteArray DiskFileSystem::readBinary(const QString& path) const {
+  return FileUtils::readFile(mRoot.getPathTo(path));
+}
+
+void DiskFileSystem::writeBinary(const QString&    path,
+                                 const QByteArray& content) {
+  FileUtils::writeFile(mRoot.getPathTo(path), content);
+}
+
+void DiskFileSystem::removeFile(const QString& path) {
+  FileUtils::removeFile(mRoot.getPathTo(path));
+}
+
+/*******************************************************************************
+ *  General Methods
+ ******************************************************************************/
+
+/*******************************************************************************
+ *  Private Methods
+ ******************************************************************************/
 
 /*******************************************************************************
  *  End of File

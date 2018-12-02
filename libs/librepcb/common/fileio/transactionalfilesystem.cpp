@@ -37,8 +37,7 @@ namespace librepcb {
  *  Constructors / Destructor
  ******************************************************************************/
 
-TransactionalFileSystem::TransactionalFileSystem(QObject* parent) noexcept
-  : QObject(parent) {
+TransactionalFileSystem::TransactionalFileSystem() noexcept {
 }
 
 TransactionalFileSystem::~TransactionalFileSystem() noexcept {
@@ -48,12 +47,44 @@ TransactionalFileSystem::~TransactionalFileSystem() noexcept {
  *  File Operations
  ******************************************************************************/
 
+QString TransactionalFileSystem::getPrettyPath(const QString& path) const
+    noexcept {
+  return toPrettyPath(mOriginFilePath, path);
+}
+
+QStringList TransactionalFileSystem::getFilesInDir(
+    QString dir, const QStringList& filters) const {
+  if (!dir.endsWith('/')) {
+    dir.append('/');
+  }
+  QStringList filenames;
+  foreach (const QString& filepath, mFiles.keys()) {
+    int pathlen = filepath.lastIndexOf('/') + 1;
+    QString path = filepath.left(pathlen);
+    if (path.toLower() == dir.toLower()) {
+      QString filename = filepath.right(filepath.length() - pathlen);
+      if (filters.isEmpty()) {
+        filenames.append(filename);
+      } else {
+        foreach (const QString& filter, filters) {
+          QRegExp rx(filter);
+          rx.setPatternSyntax(QRegExp::Wildcard);
+          if (rx.exactMatch(filename)) {
+            filenames.append(filename);
+            break;
+          }
+        }
+      }
+    }
+  }
+  return filenames;
+}
+
 bool TransactionalFileSystem::fileExists(const QString& path) const noexcept {
   return mFiles.contains(path);
 }
 
-const QByteArray& TransactionalFileSystem::readBinary(
-    const QString& path) const {
+QByteArray TransactionalFileSystem::readBinary(const QString& path) const {
   QByteArray& content = getFile(path);  // can throw
   if (content.isNull()) {
     // lazy load from disk
@@ -63,23 +94,10 @@ const QByteArray& TransactionalFileSystem::readBinary(
   return content;
 }
 
-QString TransactionalFileSystem::readText(const QString& path) const {
-  return QString::fromUtf8(readBinary(path));
-}
-
 void TransactionalFileSystem::writeBinary(const QString&    path,
                                           const QByteArray& content) {
   QByteArray& file = getOrCreateFile(path);  // can throw
   file             = content.isNull() ? QByteArray("") : content;
-}
-
-void TransactionalFileSystem::writeText(const QString& path,
-                                        const QString& content) {
-  QByteArray raw = content.toUtf8();
-  if (!raw.endsWith('\n')) {
-    raw.append('\n');  // ensure trailing newline
-  }
-  writeBinary(path, raw);
 }
 
 void TransactionalFileSystem::removeFile(const QString& path) {

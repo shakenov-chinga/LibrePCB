@@ -17,62 +17,48 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef LIBREPCB_FILESYSTEM_H
+#define LIBREPCB_FILESYSTEM_H
+
 /*******************************************************************************
  *  Includes
  ******************************************************************************/
-#include "strokefontpool.h"
-
 #include <QtCore>
 
 /*******************************************************************************
- *  Namespace
+ *  Namespace / Forward Declarations
  ******************************************************************************/
+
 namespace librepcb {
 
 /*******************************************************************************
- *  Constructors / Destructor
+ *  Class FileSystem
  ******************************************************************************/
 
-StrokeFontPool::StrokeFontPool(const FileSystem& filesystem,
-                               const QString&    path) noexcept {
-  try {
-    foreach (const QString& name, filesystem.getFilesInDir(path, {"*.bene"})) {
-      QString filepath = path % "/" % name;
-      QString absPath = filesystem.getPrettyPath(filepath);
-      try {
-        qDebug() << "Load stroke font:" << absPath;
-        mFonts.insert(name, std::make_shared<StrokeFont>(
-                                absPath, filesystem.readText(filepath)));  // can throw
-      } catch (const Exception& e) {
-        qCritical() << "Failed to load stroke font"
-                    << absPath << ":" << e.getMsg();
-      }
-    }
-  } catch (const Exception& e) {
-    qCritical() << "Failed to load stroke font pool:" << e.getMsg();
-  }
-}
+class FileSystem {
+public:
+  // Constructors / Destructor
+  FileSystem() noexcept {}
+  virtual ~FileSystem() noexcept {}
 
-StrokeFontPool::~StrokeFontPool() noexcept {
-}
+  virtual QString     getPrettyPath(const QString& path) const noexcept = 0;
+  virtual QStringList getFilesInDir(
+      QString dir, const QStringList& filters = QStringList()) const       = 0;
+  virtual bool       fileExists(const QString& path) const noexcept        = 0;
+  virtual QByteArray readBinary(const QString& path) const                 = 0;
+  virtual void writeBinary(const QString& path, const QByteArray& content) = 0;
 
-/*******************************************************************************
- *  Getters
- ******************************************************************************/
+  virtual void removeFile(const QString& path) = 0;
 
-const StrokeFont& StrokeFontPool::getFont(const QString& filename) const {
-  if (mFonts.contains(filename)) {
-    return *mFonts[filename];
-  } else {
-    throw RuntimeError(
-        __FILE__, __LINE__,
-        QString(tr("The font \"%1\" does not exist in the font pool."))
-            .arg(filename));
-  }
-}
+  // Convenience methods
+  QString readText(const QString& path) const;
+  void    writeText(const QString& path, const QString& content);
+};
 
 /*******************************************************************************
  *  End of File
  ******************************************************************************/
 
 }  // namespace librepcb
+
+#endif  // LIBREPCB_FILESYSTEM_H

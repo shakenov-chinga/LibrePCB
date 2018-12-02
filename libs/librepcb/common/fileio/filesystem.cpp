@@ -20,9 +20,7 @@
 /*******************************************************************************
  *  Includes
  ******************************************************************************/
-#include "strokefontpool.h"
-
-#include <QtCore>
+#include "filesystem.h"
 
 /*******************************************************************************
  *  Namespace
@@ -30,45 +28,19 @@
 namespace librepcb {
 
 /*******************************************************************************
- *  Constructors / Destructor
+ *  File Operations
  ******************************************************************************/
 
-StrokeFontPool::StrokeFontPool(const FileSystem& filesystem,
-                               const QString&    path) noexcept {
-  try {
-    foreach (const QString& name, filesystem.getFilesInDir(path, {"*.bene"})) {
-      QString filepath = path % "/" % name;
-      QString absPath = filesystem.getPrettyPath(filepath);
-      try {
-        qDebug() << "Load stroke font:" << absPath;
-        mFonts.insert(name, std::make_shared<StrokeFont>(
-                                absPath, filesystem.readText(filepath)));  // can throw
-      } catch (const Exception& e) {
-        qCritical() << "Failed to load stroke font"
-                    << absPath << ":" << e.getMsg();
-      }
-    }
-  } catch (const Exception& e) {
-    qCritical() << "Failed to load stroke font pool:" << e.getMsg();
-  }
+QString FileSystem::readText(const QString& path) const {
+  return QString::fromUtf8(readBinary(path));
 }
 
-StrokeFontPool::~StrokeFontPool() noexcept {
-}
-
-/*******************************************************************************
- *  Getters
- ******************************************************************************/
-
-const StrokeFont& StrokeFontPool::getFont(const QString& filename) const {
-  if (mFonts.contains(filename)) {
-    return *mFonts[filename];
-  } else {
-    throw RuntimeError(
-        __FILE__, __LINE__,
-        QString(tr("The font \"%1\" does not exist in the font pool."))
-            .arg(filename));
+void FileSystem::writeText(const QString& path, const QString& content) {
+  QByteArray raw = content.toUtf8();
+  if (!raw.endsWith('\n')) {
+    raw.append('\n');  // ensure trailing newline
   }
+  writeBinary(path, raw);
 }
 
 /*******************************************************************************

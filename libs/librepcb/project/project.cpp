@@ -191,7 +191,7 @@ Project::Project(const FilePath& filepath, bool create, bool readOnly,
   // allocated memory will be freed. Then the exception is rethrown to leave the
   // constructor.
 
-  mFileSystem.reset(new TransactionalFileSystem(this));
+  mFileSystem.reset(new TransactionalFileSystem());
   mFileSystem->loadFromDirectory(mPath);
 
   try {
@@ -300,21 +300,16 @@ Project::Project(const FilePath& filepath, bool create, bool readOnly,
     }
 
     // copy and/or load stroke fonts
-    FilePath fontobeneDir = mPath.getPathTo("resources/fontobene");
-    if (create || (!fontobeneDir.isExistingDir()) ||
-        fontobeneDir.isEmptyDir()) {
+    if (create) {
       FilePath src = qApp->getResourcesFilePath("fontobene");
-      qInfo() << "No fonts found in project, copy application fonts from"
-              << src.toNative();
-      // don't use FileUtils::copyDirRecursively() because we only want *.bene
-      // files
-      FileUtils::makePath(fontobeneDir);
       foreach (const FilePath& fp,
                FileUtils::getFilesInDirectory(src, {"*.bene"})) {
-        FileUtils::copyFile(fp, fontobeneDir.getPathTo(fp.getFilename()));
+        mFileSystem->writeBinary("resources/fontobene/" % fp.getFilename(),
+                                 FileUtils::readFile(fp));
       }
     }
-    mStrokeFontPool.reset(new StrokeFontPool(fontobeneDir));
+    mStrokeFontPool.reset(
+        new StrokeFontPool(*mFileSystem, "resources/fontobene"));
 
     // Create all needed objects
     mProjectMetadata.reset(new ProjectMetadata(*this, create));

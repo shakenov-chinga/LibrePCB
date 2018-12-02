@@ -54,7 +54,7 @@ class StrokeFont final : public QObject {
 
 public:
   // Constructors / Destructor
-  StrokeFont(const FilePath& fontFilePath) noexcept;
+  StrokeFont(const QString& filepath, QString content) noexcept;
   StrokeFont(const StrokeFont& other) = delete;
   ~StrokeFont() noexcept;
 
@@ -95,7 +95,7 @@ private:
                                   Point& topRight) noexcept;
 
 private:  // Data
-  FilePath                                             mFilePath;
+  QString                                              mFilePath;
   QFuture<fontobene::Font>                             mFuture;
   QFutureWatcher<fontobene::Font>                      mWatcher;
   mutable QScopedPointer<fontobene::Font>              mFont;

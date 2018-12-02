@@ -24,6 +24,7 @@
  *  Includes
  ******************************************************************************/
 #include "filepath.h"
+#include "filesystem.h"
 
 #include <QtCore>
 
@@ -39,22 +40,23 @@ namespace librepcb {
  *  Class TransactionalFileSystem
  ******************************************************************************/
 
-class TransactionalFileSystem final : public QObject {
-  Q_OBJECT
+class TransactionalFileSystem final : public FileSystem {
+  Q_DECLARE_TR_FUNCTIONS(TransactionalFileSystem)
 
 public:
   // Constructors / Destructor
-  TransactionalFileSystem(QObject* parent = nullptr) noexcept;
+  TransactionalFileSystem() noexcept;
   TransactionalFileSystem(const TransactionalFileSystem& other) = delete;
   ~TransactionalFileSystem() noexcept;
 
   // File Operations
-  bool              fileExists(const QString& path) const noexcept;
-  const QByteArray& readBinary(const QString& path) const;
-  QString           readText(const QString& path) const;
-  void              writeBinary(const QString& path, const QByteArray& content);
-  void              writeText(const QString& path, const QString& content);
-  void              removeFile(const QString& path);
+  QString     getPrettyPath(const QString& path) const noexcept override;
+  QStringList getFilesInDir(
+      QString dir, const QStringList& filters = QStringList()) const override;
+  bool       fileExists(const QString& path) const noexcept override;
+  QByteArray readBinary(const QString& path) const override;
+  void writeBinary(const QString& path, const QByteArray& content) override;
+  void removeFile(const QString& path) override;
 
   // General Methods
   void clear() noexcept;

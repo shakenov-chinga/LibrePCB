@@ -23,6 +23,7 @@
 /*******************************************************************************
  *  Includes
  ******************************************************************************/
+#include "../fileio/filesystem.h"
 #include "strokefont.h"
 
 #include <QtCore>
@@ -46,7 +47,7 @@ class StrokeFontPool final {
 
 public:
   // Constructors / Destructor
-  StrokeFontPool(const FilePath& directory) noexcept;
+  StrokeFontPool(const FileSystem& filesystem, const QString& path) noexcept;
   StrokeFontPool(const StrokeFontPool& other) = delete;
   ~StrokeFontPool() noexcept;
 

@@ -24,6 +24,7 @@
 
 #include "dialogs/aboutdialog.h"
 #include "exceptions.h"
+#include "fileio/diskfilesystem.h"
 #include "font/strokefontpool.h"
 #include "units/all_length_units.h"
 
@@ -157,7 +158,8 @@ Application::Application(int& argc, char** argv) noexcept
   mMonospaceFont.setFamily("Noto Sans Mono");
 
   // load all stroke fonts
-  mStrokeFontPool.reset(new StrokeFontPool(getResourcesFilePath("fontobene")));
+  mResourcesFileSystem.reset(new DiskFileSystem(mResourcesDir));
+  mStrokeFontPool.reset(new StrokeFontPool(*mResourcesFileSystem, "fontobene"));
   getDefaultStrokeFont();  // ensure that the default font is available (aborts
                            // if not)
 }

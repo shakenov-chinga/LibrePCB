@@ -23,6 +23,8 @@
 /*******************************************************************************
  *  Includes
  ******************************************************************************/
+#include "filepath.h"
+
 #include <QtCore>
 
 /*******************************************************************************
@@ -41,14 +43,15 @@ public:
   FileSystem() noexcept {}
   virtual ~FileSystem() noexcept {}
 
+  // General Methods
   virtual QString     getPrettyPath(const QString& path) const noexcept = 0;
   virtual QStringList getFilesInDir(
       QString dir, const QStringList& filters = QStringList()) const       = 0;
   virtual bool       fileExists(const QString& path) const noexcept        = 0;
   virtual QByteArray readBinary(const QString& path) const                 = 0;
   virtual void writeBinary(const QString& path, const QByteArray& content) = 0;
-
-  virtual void removeFile(const QString& path) = 0;
+  virtual FilePath createTemporaryFileOnDisk(const QString& path) const    = 0;
+  virtual void     removeFile(const QString& path)                         = 0;
 
   // Convenience methods
   QString readText(const QString& path) const;

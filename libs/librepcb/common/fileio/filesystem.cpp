@@ -28,7 +28,7 @@
 namespace librepcb {
 
 /*******************************************************************************
- *  File Operations
+ *  General Methods
  ******************************************************************************/
 
 QString FileSystem::readText(const QString& path) const {

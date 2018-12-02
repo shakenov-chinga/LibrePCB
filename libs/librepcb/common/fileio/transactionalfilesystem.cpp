@@ -37,10 +37,14 @@ namespace librepcb {
  *  Constructors / Destructor
  ******************************************************************************/
 
-TransactionalFileSystem::TransactionalFileSystem() noexcept {
+TransactionalFileSystem::TransactionalFileSystem() noexcept
+  : mTmpDir(FilePath::getRandomTempPath()) {
 }
 
 TransactionalFileSystem::~TransactionalFileSystem() noexcept {
+  if (!QDir(mTmpDir.toStr()).removeRecursively()) {
+    qWarning() << "Could not remove directory" << mTmpDir.toNative();
+  }
 }
 
 /*******************************************************************************
@@ -59,8 +63,8 @@ QStringList TransactionalFileSystem::getFilesInDir(
   }
   QStringList filenames;
   foreach (const QString& filepath, mFiles.keys()) {
-    int pathlen = filepath.lastIndexOf('/') + 1;
-    QString path = filepath.left(pathlen);
+    int     pathlen = filepath.lastIndexOf('/') + 1;
+    QString path    = filepath.left(pathlen);
     if (path.toLower() == dir.toLower()) {
       QString filename = filepath.right(filepath.length() - pathlen);
       if (filters.isEmpty()) {
@@ -85,19 +89,24 @@ bool TransactionalFileSystem::fileExists(const QString& path) const noexcept {
 }
 
 QByteArray TransactionalFileSystem::readBinary(const QString& path) const {
-  QByteArray& content = getFile(path);  // can throw
+  const QByteArray& content = getFile(path);  // can throw
   if (content.isNull()) {
-    // lazy load from disk
-    FilePath originFilePath = mOriginFilePath.getPathTo(path);
-    content                 = FileUtils::readFile(originFilePath);  // can throw
+    // no temporary changes -> load from disk
+    return FileUtils::readFile(mOriginFilePath.getPathTo(path));  // can throw
+  } else {
+    return content;
   }
-  return content;
 }
 
 void TransactionalFileSystem::writeBinary(const QString&    path,
                                           const QByteArray& content) {
   QByteArray& file = getOrCreateFile(path);  // can throw
   file             = content.isNull() ? QByteArray("") : content;
+}
+
+FilePath TransactionalFileSystem::createTemporaryFileOnDisk(
+    const QString& path) const {
+  return FilePath();
 }
 
 void TransactionalFileSystem::removeFile(const QString& path) {
@@ -109,14 +118,9 @@ void TransactionalFileSystem::removeFile(const QString& path) {
  *  General Methods
  ******************************************************************************/
 
-void TransactionalFileSystem::clear() noexcept {
-  mOriginFilePath = FilePath();
+void TransactionalFileSystem::loadFromDirectory(const FilePath& fp) {
   mFiles.clear();
   mRemovedFiles.clear();
-}
-
-void TransactionalFileSystem::loadFromDirectory(const FilePath& fp) {
-  clear();
   mOriginFilePath = fp;
   if (!fp.isExistingDir()) {
     throw LogicError(
@@ -187,7 +191,7 @@ void TransactionalFileSystem::saveToZip(const FilePath& fp) {
  *  Private Methods
  ******************************************************************************/
 
-QByteArray& TransactionalFileSystem::getFile(const QString& path) const {
+const QByteArray& TransactionalFileSystem::getFile(const QString& path) const {
   auto it = mFiles.find(path);
   if (it != mFiles.end()) {
     return *it;

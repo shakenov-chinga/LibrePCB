@@ -56,16 +56,16 @@ public:
   bool       fileExists(const QString& path) const noexcept override;
   QByteArray readBinary(const QString& path) const override;
   void writeBinary(const QString& path, const QByteArray& content) override;
+  FilePath createTemporaryFileOnDisk(const QString& path) const override;
   void removeFile(const QString& path) override;
 
   // General Methods
-  void clear() noexcept;
   void loadFromDirectory(const FilePath& fp);
   void saveToDirectory(const FilePath& fp);
   void saveToZip(const FilePath& fp);
 
 private:  // Methods
-  QByteArray& getFile(const QString& path) const;
+  const QByteArray& getFile(const QString& path) const;
   QByteArray& getOrCreateFile(const QString& path);
   void        loadDir(const FilePath& dir, const QString& prefix = QString());
   // void        saveDir(const Dir& dir, const FilePath& fp) const;
@@ -74,8 +74,9 @@ private:  // Methods
   static FilePath toAbsPath(const FilePath& root, const QString& path);
 
 private:  // Data
+  FilePath mTmpDir;
   FilePath                           mOriginFilePath;
-  mutable QHash<QString, QByteArray> mFiles;  // mutable for lazy load
+  QHash<QString, QByteArray> mFiles;
   QSet<QString>                      mRemovedFiles;
 };
 

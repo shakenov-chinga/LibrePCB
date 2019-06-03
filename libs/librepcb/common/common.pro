@@ -129,6 +129,28 @@ SOURCES += \
     widgets/signalrolecombobox.cpp \
     widgets/statusbar.cpp \
     widgets/tabwidget.cpp \
+    items/xs_baseitem.cpp \
+    items/xs_circle.cpp \
+    items/x_board.cpp \
+    items/x_schematic.cpp \
+    items/xb_baseitem.cpp \
+    items/xb_device.cpp \
+    items/xb_circle.cpp \
+    items/xb_footprint.cpp \
+    items/xb_hole.cpp \
+    items/xb_padpth.cpp \
+    items/xb_padsmd.cpp \
+    items/xb_path.cpp \
+    items/xb_polygon.cpp \
+    items/xb_text.cpp \
+    items/xb_via.cpp \
+    items/xs_path.cpp \
+    items/xs_pin.cpp \
+    items/xs_polygon.cpp \
+    items/xs_text.cpp \
+    items/xs_symbol.cpp \
+    items/xs_line.cpp \
+    items/xb_line.cpp
 
 HEADERS += \
     alignment.h \
@@ -249,6 +271,29 @@ HEADERS += \
     widgets/signalrolecombobox.h \
     widgets/statusbar.h \
     widgets/tabwidget.h \
+    items/xs_baseitem.h \
+    items/xs_circle.h \
+    items/x_board.h \
+    items/x_schematic.h \
+    items/xb_baseitem.h \
+    items/xb_device.h \
+    items/xb_circle.h \
+    items/xb_footprint.h \
+    items/xb_hole.h \
+    items/xb_padpth.h \
+    items/xb_padsmd.h \
+    items/xb_path.h \
+    items/xb_polygon.h \
+    items/xb_text.h \
+    items/xb_via.h \
+    items/xs_path.h \
+    items/xs_pin.h \
+    items/xs_polygon.h \
+    items/xs_text.h \
+    items/xs_symbol.h \
+    items/x_textalign.h \
+    items/xs_line.h \
+    items/xb_line.h
 
 FORMS += \
     dialogs/aboutdialog.ui \

@@ -35,7 +35,7 @@
 namespace librepcb {
 namespace project {
 
-class Schematic;
+class X_Schematic;
 class ComponentInstance;
 class SI_Symbol;
 

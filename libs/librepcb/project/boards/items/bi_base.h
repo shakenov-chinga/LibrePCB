@@ -39,7 +39,7 @@ namespace project {
 
 class Project;
 class Circuit;
-class Board;
+class X_Board;
 class BGI_Base;
 
 /*******************************************************************************
@@ -72,13 +72,13 @@ public:
   // Constructors / Destructor
   BI_Base()                     = delete;
   BI_Base(const BI_Base& other) = delete;
-  BI_Base(Board& board) noexcept;
+  BI_Base(X_Board& board) noexcept;
   virtual ~BI_Base() noexcept;
 
   // Getters
   Project&             getProject() const noexcept;
   Circuit&             getCircuit() const noexcept;
-  Board&               getBoard() const noexcept { return mBoard; }
+  X_Board&               getBoard() const noexcept { return mBoard; }
   virtual Type_t       getType() const noexcept            = 0;
   virtual const Point& getPosition() const noexcept        = 0;
   virtual bool         getIsMirrored() const noexcept      = 0;
@@ -103,7 +103,7 @@ protected:
   void removeFromBoard(QGraphicsItem* item) noexcept;
 
 protected:
-  Board& mBoard;
+  X_Board& mBoard;
 
 private:
   // General Attributes

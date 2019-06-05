@@ -228,7 +228,7 @@ BES_Base::ProcRetVal BES_DrawTrace::processIdleSceneEvent(
   QEvent* qevent = BEE_RedirectedQEvent::getQEventFromBEE(event);
   Q_ASSERT(qevent);
   if (!qevent) return PassToParentState;
-  Board* board = mEditor.getActiveBoard();
+  X_Board* board = mEditor.getActiveBoard();
   Q_ASSERT(board);
   if (!board) return PassToParentState;
 
@@ -273,7 +273,7 @@ BES_Base::ProcRetVal BES_DrawTrace::processPositioningSceneEvent(
   QEvent* qevent = BEE_RedirectedQEvent::getQEventFromBEE(event);
   Q_ASSERT(qevent);
   if (!qevent) return PassToParentState;
-  Board* board = mEditor.getActiveBoard();
+  X_Board* board = mEditor.getActiveBoard();
   Q_ASSERT(board);
   if (!board) return PassToParentState;
 
@@ -338,7 +338,7 @@ BES_Base::ProcRetVal BES_DrawTrace::processPositioningSceneEvent(
   return PassToParentState;
 }
 
-bool BES_DrawTrace::startPositioning(Board& board, const Point& pos,
+bool BES_DrawTrace::startPositioning(X_Board& board, const Point& pos,
                                      BI_NetPoint* fixedPoint) noexcept {
   Point posOnGrid = pos.mappedToGrid(board.getGridProperties().getInterval());
 
@@ -463,7 +463,7 @@ bool BES_DrawTrace::startPositioning(Board& board, const Point& pos,
   }
 }
 
-bool BES_DrawTrace::addNextNetPoint(Board& board, const Point& pos) noexcept {
+bool BES_DrawTrace::addNextNetPoint(X_Board& board, const Point& pos) noexcept {
   Q_ASSERT(mSubState == SubState_PositioningNetPoint);
 
   // abort if p2 == p0 (no line drawn)
@@ -607,13 +607,13 @@ bool BES_DrawTrace::abortPositioning(bool showErrMsgBox) noexcept {
   }
 }
 
-BI_Via* BES_DrawTrace::findVia(Board& board, const Point& pos,
+BI_Via* BES_DrawTrace::findVia(X_Board& board, const Point& pos,
                                NetSignal* netsignal) const noexcept {
   QList<BI_Via*> items = board.getViasAtScenePos(pos, netsignal);
   return items.count() > 0 ? items.first() : nullptr;
 }
 
-BI_FootprintPad* BES_DrawTrace::findPad(Board& board, const Point& pos,
+BI_FootprintPad* BES_DrawTrace::findPad(X_Board& board, const Point& pos,
                                         GraphicsLayer* layer,
                                         NetSignal* netsignal) const noexcept {
   QList<BI_FootprintPad*> items =
@@ -626,7 +626,7 @@ BI_FootprintPad* BES_DrawTrace::findPad(Board& board, const Point& pos,
   return nullptr;
 }
 
-BI_NetPoint* BES_DrawTrace::findNetPoint(Board& board, const Point& pos,
+BI_NetPoint* BES_DrawTrace::findNetPoint(X_Board& board, const Point& pos,
                                          GraphicsLayer*            layer,
                                          NetSignal*                netsignal,
                                          const QSet<BI_NetPoint*>& except) const
@@ -638,7 +638,7 @@ BI_NetPoint* BES_DrawTrace::findNetPoint(Board& board, const Point& pos,
                                                   : nullptr;
 }
 
-BI_NetLine* BES_DrawTrace::findNetLine(Board& board, const Point& pos,
+BI_NetLine* BES_DrawTrace::findNetLine(X_Board& board, const Point& pos,
                                        GraphicsLayer*           layer,
                                        NetSignal*               netsignal,
                                        const QSet<BI_NetLine*>& except) const

@@ -52,7 +52,7 @@ namespace project {
 
 SGI_SymbolPin::SGI_SymbolPin(SI_SymbolPin& pin) noexcept
   : SGI_Base(), mPin(pin), mLibPin(pin.getLibPin()), mIsVisibleJunction(false) {
-  setZValue(Schematic::ZValue_Symbols);
+  setZValue(X_Schematic::ZValue_Symbols);
   setToolTip(*mLibPin.getName());
 
   mJunctionLayer = getLayer(GraphicsLayer::sSchematicNetLines);

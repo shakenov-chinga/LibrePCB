@@ -34,7 +34,7 @@
 namespace librepcb {
 namespace project {
 
-class Board;
+class X_Board;
 
 namespace editor {
 
@@ -48,7 +48,7 @@ namespace editor {
 class CmdRotateSelectedBoardItems final : public UndoCommandGroup {
 public:
   // Constructors / Destructor
-  CmdRotateSelectedBoardItems(Board& board, const Angle& angle) noexcept;
+  CmdRotateSelectedBoardItems(X_Board& board, const Angle& angle) noexcept;
   ~CmdRotateSelectedBoardItems() noexcept;
 
 private:
@@ -60,7 +60,7 @@ private:
   // Private Member Variables
 
   // Attributes from the constructor
-  Board& mBoard;
+  X_Board& mBoard;
   Angle  mAngle;
 };
 

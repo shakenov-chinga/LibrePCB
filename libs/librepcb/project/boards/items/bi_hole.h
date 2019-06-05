@@ -40,7 +40,7 @@ class HoleGraphicsItem;
 namespace project {
 
 class Project;
-class Board;
+class X_Board;
 
 /*******************************************************************************
  *  Class BI_Hole
@@ -56,9 +56,9 @@ public:
   // Constructors / Destructor
   BI_Hole()                     = delete;
   BI_Hole(const BI_Hole& other) = delete;
-  BI_Hole(Board& board, const BI_Hole& other);
-  BI_Hole(Board& board, const SExpression& node);
-  BI_Hole(Board& board, const Hole& hole);
+  BI_Hole(X_Board& board, const BI_Hole& other);
+  BI_Hole(X_Board& board, const SExpression& node);
+  BI_Hole(X_Board& board, const Hole& hole);
   ~BI_Hole() noexcept;
 
   // Getters

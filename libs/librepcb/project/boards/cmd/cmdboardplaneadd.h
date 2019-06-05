@@ -33,7 +33,7 @@
 namespace librepcb {
 namespace project {
 
-class Board;
+class X_Board;
 class BI_Plane;
 
 /*******************************************************************************
@@ -62,7 +62,7 @@ private:  // Methods
   void performRedo() override;
 
 private:  // Data
-  Board&    mBoard;
+  X_Board&    mBoard;
   BI_Plane& mPlane;
 };
 

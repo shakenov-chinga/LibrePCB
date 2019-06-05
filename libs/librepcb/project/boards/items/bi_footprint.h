@@ -43,7 +43,7 @@ class Footprint;
 
 namespace project {
 
-class Board;
+class X_Board;
 class BI_Device;
 class BI_FootprintPad;
 

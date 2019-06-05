@@ -33,7 +33,7 @@
 namespace librepcb {
 namespace project {
 
-class Board;
+class X_Board;
 class BI_NetSegment;
 
 /*******************************************************************************
@@ -63,7 +63,7 @@ private:
 
   // Private Member Variables
 
-  Board&         mBoard;
+  X_Board&         mBoard;
   BI_NetSegment& mNetSegment;
 };
 

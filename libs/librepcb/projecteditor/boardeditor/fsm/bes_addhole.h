@@ -38,7 +38,7 @@ class CmdHoleEdit;
 
 namespace project {
 
-class Board;
+class X_Board;
 
 namespace editor {
 
@@ -66,7 +66,7 @@ public:
 private:
   // Private Methods
   ProcRetVal processSceneEvent(BEE_Base* event) noexcept;
-  bool       addHole(Board& board, const Point& pos) noexcept;
+  bool       addHole(X_Board& board, const Point& pos) noexcept;
   void       updateHolePosition(const Point& pos) noexcept;
   bool       fixHole(const Point& pos) noexcept;
   void       diameterSpinBoxValueChanged(double value) noexcept;

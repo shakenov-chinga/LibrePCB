@@ -34,7 +34,7 @@ namespace librepcb {
 namespace project {
 
 class Project;
-class Schematic;
+class X_Schematic;
 
 namespace editor {
 

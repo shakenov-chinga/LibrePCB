@@ -71,8 +71,8 @@ private:  // Methods
   ProcRetVal processSubStatePositioning(BEE_Base* event) noexcept;
   ProcRetVal processIdleSceneEvent(BEE_Base* event) noexcept;
   ProcRetVal processPositioningSceneEvent(BEE_Base* event) noexcept;
-  bool       start(Board& board, const Point& pos) noexcept;
-  bool       addSegment(Board& board, const Point& pos) noexcept;
+  bool       start(X_Board& board, const Point& pos) noexcept;
+  bool       addSegment(X_Board& board, const Point& pos) noexcept;
   bool       abort(bool showErrMsgBox) noexcept;
   void       updateSegmentPosition(const Point& cursorPos) noexcept;
   void       layerComboBoxLayerChanged(const QString& layerName) noexcept;

@@ -34,7 +34,7 @@
 namespace librepcb {
 namespace project {
 
-class Schematic;
+class X_Schematic;
 
 namespace editor {
 
@@ -48,7 +48,7 @@ namespace editor {
 class CmdRotateSelectedSchematicItems final : public UndoCommandGroup {
 public:
   // Constructors / Destructor
-  CmdRotateSelectedSchematicItems(Schematic&   schematic,
+  CmdRotateSelectedSchematicItems(X_Schematic&   schematic,
                                   const Angle& angle) noexcept;
   ~CmdRotateSelectedSchematicItems() noexcept;
 
@@ -61,7 +61,7 @@ private:
   // Private Member Variables
 
   // Attributes from the constructor
-  Schematic& mSchematic;
+  X_Schematic& mSchematic;
   Angle      mAngle;
 };
 

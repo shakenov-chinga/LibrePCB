@@ -148,7 +148,7 @@ BES_Base::ProcRetVal BES_Select::processSubStateIdleSceneEvent(
   QEvent* qevent = BEE_RedirectedQEvent::getQEventFromBEE(event);
   Q_ASSERT(qevent);
   if (!qevent) return PassToParentState;
-  Board* board = mEditor.getActiveBoard();
+  X_Board* board = mEditor.getActiveBoard();
   if (!board) return PassToParentState;
 
   switch (qevent->type()) {
@@ -212,7 +212,7 @@ BES_Base::ProcRetVal BES_Select::processSubStateIdleSceneEvent(
 }
 
 BES_Base::ProcRetVal BES_Select::proccessIdleSceneLeftClick(
-    QGraphicsSceneMouseEvent* mouseEvent, Board& board) noexcept {
+    QGraphicsSceneMouseEvent* mouseEvent, X_Board& board) noexcept {
   // handle items selection
   QList<BI_Base*> items =
       board.getItemsAtScenePos(Point::fromPx(mouseEvent->scenePos()));
@@ -241,7 +241,7 @@ BES_Base::ProcRetVal BES_Select::proccessIdleSceneLeftClick(
 }
 
 BES_Base::ProcRetVal BES_Select::proccessIdleSceneRightMouseButtonReleased(
-    QGraphicsSceneMouseEvent* mouseEvent, Board* board) noexcept {
+    QGraphicsSceneMouseEvent* mouseEvent, X_Board* board) noexcept {
   // handle item selection
   QList<BI_Base*> items =
       board->getItemsAtScenePos(Point::fromPx(mouseEvent->scenePos()));
@@ -534,7 +534,7 @@ BES_Base::ProcRetVal BES_Select::proccessIdleSceneRightMouseButtonReleased(
 }
 
 BES_Base::ProcRetVal BES_Select::proccessIdleSceneDoubleClick(
-    QGraphicsSceneMouseEvent* mouseEvent, Board* board) noexcept {
+    QGraphicsSceneMouseEvent* mouseEvent, X_Board* board) noexcept {
   if (mouseEvent->button() == Qt::LeftButton) {
     // check if there is an element under the mouse
     QList<BI_Base*> items =
@@ -664,7 +664,7 @@ BES_Base::ProcRetVal BES_Select::processSubStateMovingSceneEvent(
   return PassToParentState;
 }
 
-bool BES_Select::startMovingSelectedItems(Board&       board,
+bool BES_Select::startMovingSelectedItems(X_Board&       board,
                                           const Point& startPos) noexcept {
   Q_ASSERT(mSelectedItemsMoveCommand.isNull());
   mSelectedItemsMoveCommand.reset(
@@ -674,7 +674,7 @@ bool BES_Select::startMovingSelectedItems(Board&       board,
 }
 
 bool BES_Select::rotateSelectedItems(const Angle& angle) noexcept {
-  Board* board = mEditor.getActiveBoard();
+  X_Board* board = mEditor.getActiveBoard();
   Q_ASSERT(board);
   if (!board) return false;
 
@@ -690,7 +690,7 @@ bool BES_Select::rotateSelectedItems(const Angle& angle) noexcept {
 }
 
 bool BES_Select::flipSelectedItems(Qt::Orientation orientation) noexcept {
-  Board* board = mEditor.getActiveBoard();
+  X_Board* board = mEditor.getActiveBoard();
   Q_ASSERT(board);
   if (!board) return false;
 
@@ -706,7 +706,7 @@ bool BES_Select::flipSelectedItems(Qt::Orientation orientation) noexcept {
 }
 
 bool BES_Select::removeSelectedItems() noexcept {
-  Board* board = mEditor.getActiveBoard();
+  X_Board* board = mEditor.getActiveBoard();
   Q_ASSERT(board);
   if (!board) return false;
 
@@ -735,21 +735,21 @@ void BES_Select::openPlanePropertiesDialog(BI_Plane& plane) noexcept {
   dialog.exec();
 }
 
-void BES_Select::openPolygonPropertiesDialog(Board&   board,
+void BES_Select::openPolygonPropertiesDialog(X_Board&   board,
                                              Polygon& polygon) noexcept {
   PolygonPropertiesDialog dialog(
       polygon, mUndoStack, board.getLayerStack().getAllowedPolygonLayers());
   dialog.exec();
 }
 
-void BES_Select::openStrokeTextPropertiesDialog(Board&      board,
+void BES_Select::openStrokeTextPropertiesDialog(X_Board&      board,
                                                 StrokeText& text) noexcept {
   StrokeTextPropertiesDialog dialog(
       text, mUndoStack, board.getLayerStack().getAllowedPolygonLayers());
   dialog.exec();
 }
 
-void BES_Select::openHolePropertiesDialog(Board& board, Hole& hole) noexcept {
+void BES_Select::openHolePropertiesDialog(X_Board& board, Hole& hole) noexcept {
   Q_UNUSED(board);
   HolePropertiesDialog dialog(hole, mUndoStack);
   dialog.exec();

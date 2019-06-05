@@ -68,7 +68,7 @@ bool CmdRemoveUnusedLibraryElements::performExecute() {
     Q_ASSERT(ci);
     usedComponents.insert(&ci->getLibComponent());
   }
-  foreach (const Board* brd, mProject.getBoards()) {
+  foreach (const X_Board* brd, mProject.getBoards()) {
     Q_ASSERT(brd);
     foreach (const BI_Device* dev, brd->getDeviceInstances()) {
       Q_ASSERT(dev);
@@ -76,7 +76,7 @@ bool CmdRemoveUnusedLibraryElements::performExecute() {
       usedDevices.insert(&dev->getLibDevice());
     }
   }
-  foreach (const Schematic* sch, mProject.getSchematics()) {
+  foreach (const X_Schematic* sch, mProject.getSchematics()) {
     Q_ASSERT(sch);
     foreach (const SI_Symbol* si, sch->getSymbols()) {
       Q_ASSERT(si);

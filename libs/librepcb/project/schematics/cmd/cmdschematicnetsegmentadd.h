@@ -34,7 +34,7 @@ namespace librepcb {
 namespace project {
 
 class NetSignal;
-class Schematic;
+class X_Schematic;
 class SI_NetSegment;
 
 /*******************************************************************************
@@ -48,7 +48,7 @@ class CmdSchematicNetSegmentAdd final : public UndoCommand {
 public:
   // Constructors / Destructor
   explicit CmdSchematicNetSegmentAdd(SI_NetSegment& segment) noexcept;
-  CmdSchematicNetSegmentAdd(Schematic& schematic,
+  CmdSchematicNetSegmentAdd(X_Schematic& schematic,
                             NetSignal& netsignal) noexcept;
   ~CmdSchematicNetSegmentAdd() noexcept;
 
@@ -69,7 +69,7 @@ private:
 
   // Private Member Variables
 
-  Schematic&     mSchematic;
+  X_Schematic&     mSchematic;
   NetSignal&     mNetSignal;
   SI_NetSegment* mNetSegment;
 };

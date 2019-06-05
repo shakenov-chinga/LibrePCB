@@ -48,7 +48,7 @@ class FootprintPreviewGraphicsItem;
 namespace project {
 
 class Project;
-class Board;
+class X_Board;
 class ComponentInstance;
 
 namespace editor {
@@ -78,7 +78,7 @@ public:
   int getUnplacedComponentsCount() const noexcept;
 
   // Setters
-  void setBoard(Board* board);
+  void setBoard(X_Board* board);
 
 signals:
 
@@ -119,7 +119,7 @@ private:
   // General
   ProjectEditor&                               mProjectEditor;
   Project&                                     mProject;
-  Board*                                       mBoard;
+  X_Board*                                       mBoard;
   Ui::UnplacedComponentsDock*                  mUi;
   QScopedPointer<DefaultGraphicsLayerProvider> mGraphicsLayerProvider;
   GraphicsScene*                               mFootprintPreviewGraphicsScene;

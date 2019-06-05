@@ -35,7 +35,7 @@
 namespace librepcb {
 namespace project {
 
-class Board;
+class X_Board;
 
 /*******************************************************************************
  *  Class BoardLayerStack
@@ -54,13 +54,13 @@ public:
   // Constructors / Destructor
   BoardLayerStack()                             = delete;
   BoardLayerStack(const BoardLayerStack& other) = delete;
-  BoardLayerStack(Board& board, const BoardLayerStack& other);
-  BoardLayerStack(Board& board, const SExpression& node);
-  explicit BoardLayerStack(Board& board);
+  BoardLayerStack(X_Board& board, const BoardLayerStack& other);
+  BoardLayerStack(X_Board& board, const SExpression& node);
+  explicit BoardLayerStack(X_Board& board);
   ~BoardLayerStack() noexcept;
 
   // Getters
-  Board& getBoard() const noexcept { return mBoard; }
+  X_Board& getBoard() const noexcept { return mBoard; }
   int    getInnerLayerCount() const noexcept { return mInnerLayerCount; }
   QList<GraphicsLayer*> getAllowedPolygonLayers() const noexcept;
 
@@ -100,7 +100,7 @@ private:
   void addLayer(GraphicsLayer* layer) noexcept;
 
   // General
-  Board& mBoard;  ///< A reference to the Board object (from the ctor)
+  X_Board& mBoard;  ///< A reference to the Board object (from the ctor)
   QList<GraphicsLayer*> mLayers;
   bool                  mLayersChanged;
 

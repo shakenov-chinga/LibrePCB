@@ -34,7 +34,7 @@ namespace librepcb {
 namespace project {
 
 class Project;
-class Board;
+class X_Board;
 class ComponentInstance;
 
 namespace editor {

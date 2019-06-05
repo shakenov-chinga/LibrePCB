@@ -40,7 +40,7 @@ namespace project {
  *  Constructors / Destructor
  ******************************************************************************/
 
-SI_Base::SI_Base(Schematic& schematic) noexcept
+SI_Base::SI_Base(X_Schematic& schematic) noexcept
   : QObject(&schematic),
     mSchematic(schematic),
     mIsAddedToSchematic(false),

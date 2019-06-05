@@ -65,7 +65,7 @@ namespace editor {
  ******************************************************************************/
 
 CmdFlipSelectedBoardItems::CmdFlipSelectedBoardItems(
-    Board& board, Qt::Orientation orientation) noexcept
+    X_Board& board, Qt::Orientation orientation) noexcept
   : UndoCommandGroup(tr("Flip Board Elements")),
     mBoard(board),
     mOrientation(orientation) {

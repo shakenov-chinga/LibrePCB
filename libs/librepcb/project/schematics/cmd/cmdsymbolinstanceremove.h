@@ -33,7 +33,7 @@
 namespace librepcb {
 namespace project {
 
-class Schematic;
+class X_Schematic;
 class SI_Symbol;
 
 /*******************************************************************************
@@ -46,7 +46,7 @@ class SI_Symbol;
 class CmdSymbolInstanceRemove final : public UndoCommand {
 public:
   // Constructors / Destructor
-  CmdSymbolInstanceRemove(Schematic& schematic, SI_Symbol& symbol) noexcept;
+  CmdSymbolInstanceRemove(X_Schematic& schematic, SI_Symbol& symbol) noexcept;
   ~CmdSymbolInstanceRemove() noexcept;
 
 private:
@@ -63,7 +63,7 @@ private:
 
   // Private Member Variables
 
-  Schematic& mSchematic;
+  X_Schematic& mSchematic;
   SI_Symbol& mSymbol;
 };
 

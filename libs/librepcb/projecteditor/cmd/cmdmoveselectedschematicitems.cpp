@@ -50,7 +50,7 @@ namespace editor {
  ******************************************************************************/
 
 CmdMoveSelectedSchematicItems::CmdMoveSelectedSchematicItems(
-    Schematic& schematic, const Point& startPos) noexcept
+    X_Schematic& schematic, const Point& startPos) noexcept
   : UndoCommandGroup(tr("Move Schematic Elements")),
     mSchematic(schematic),
     mStartPos(startPos),

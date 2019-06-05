@@ -322,14 +322,14 @@ bool CommandLineInterface::openProject(
     // Export PCB fabrication data
     if (exportPcbFabricationData) {
       print(tr("Export PCB fabrication data..."));
-      QList<Board*> boardList;
+      QList<X_Board*> boardList;
       if (boards.isEmpty()) {
         // export all boards
         boardList = project.getBoards();
       } else {
         // export specified boards
         foreach (const QString& boardName, boards) {
-          Board* board = project.getBoardByName(boardName);
+          X_Board* board = project.getBoardByName(boardName);
           if (board) {
             boardList.append(board);
           } else {
@@ -356,7 +356,7 @@ bool CommandLineInterface::openProject(
       }
       QHash<FilePath, int> filesCounter;
       bool                 filesOverwritten = false;
-      foreach (const Board* board, boardList) {
+      foreach (const X_Board* board, boardList) {
         print("  " % QString(tr("Board '%1':")).arg(*board->getName()));
         BoardGerberExport grbExport(
             *board, customSettings ? *customSettings

@@ -33,7 +33,7 @@
 namespace librepcb {
 namespace project {
 
-class Board;
+class X_Board;
 class BI_Device;
 class BI_NetSegment;
 class BI_Via;
@@ -68,7 +68,7 @@ public:
   // Constructors / Destructor
   CmdRemoveBoardItems()                                 = delete;
   CmdRemoveBoardItems(const CmdRemoveBoardItems& other) = delete;
-  explicit CmdRemoveBoardItems(Board& board) noexcept;
+  explicit CmdRemoveBoardItems(X_Board& board) noexcept;
   ~CmdRemoveBoardItems() noexcept;
 
   // Set items to remove
@@ -129,7 +129,7 @@ private:  // Methods
       QSet<BI_NetLine*>& availableNetLines) const noexcept;
 
 private:  // Data
-  Board& mBoard;
+  X_Board& mBoard;
 
   // Items to remove
   QSet<BI_Device*>     mDeviceInstances;

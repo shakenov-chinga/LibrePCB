@@ -50,16 +50,16 @@ BGI_Base::~BGI_Base() noexcept {
 
 qreal BGI_Base::getZValueOfCopperLayer(const QString& name) noexcept {
   if (GraphicsLayer::isTopLayer(name)) {
-    return Board::ItemZValue::ZValue_CopperTop;
+    return X_Board::ItemZValue::ZValue_CopperTop;
   } else if (GraphicsLayer::isBottomLayer(name)) {
-    return Board::ItemZValue::ZValue_CopperBottom;
+    return X_Board::ItemZValue::ZValue_CopperBottom;
   } else if (GraphicsLayer::isCopperLayer(name)) {
     // 0.0 => TOP
     // 1.0 => BOTTOM
     qreal delta = QString(name).remove("in").remove("_cu").toDouble() / 100.0;
-    return (Board::ItemZValue::ZValue_CopperTop - delta);
+    return (X_Board::ItemZValue::ZValue_CopperTop - delta);
   } else {
-    return Board::ItemZValue::ZValue_Default;
+    return X_Board::ItemZValue::ZValue_Default;
   }
 }
 

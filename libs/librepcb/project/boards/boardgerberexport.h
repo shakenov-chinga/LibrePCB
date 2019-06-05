@@ -42,7 +42,7 @@ class GerberGenerator;
 namespace project {
 
 class Project;
-class Board;
+class X_Board;
 class BI_Via;
 class BI_Footprint;
 class BI_FootprintPad;
@@ -62,7 +62,7 @@ public:
   // Constructors / Destructor
   BoardGerberExport()                               = delete;
   BoardGerberExport(const BoardGerberExport& other) = delete;
-  BoardGerberExport(const Board&                          board,
+  BoardGerberExport(const X_Board&                          board,
                     const BoardFabricationOutputSettings& settings) noexcept;
   ~BoardGerberExport() noexcept;
 
@@ -131,7 +131,7 @@ private:
 
   // Private Member Variables
   const Project&                                       mProject;
-  const Board&                                         mBoard;
+  const X_Board&                                         mBoard;
   QScopedPointer<const BoardFabricationOutputSettings> mSettings;
   mutable int                                          mCurrentInnerCopperLayer;
   mutable QVector<FilePath>                            mWrittenFiles;

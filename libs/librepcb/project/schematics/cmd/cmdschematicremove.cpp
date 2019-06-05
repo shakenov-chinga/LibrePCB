@@ -38,7 +38,7 @@ namespace project {
  ******************************************************************************/
 
 CmdSchematicRemove::CmdSchematicRemove(Project&   project,
-                                       Schematic& schematic) noexcept
+                                       X_Schematic& schematic) noexcept
   : UndoCommand(tr("Remove schematic")),
     mProject(project),
     mSchematic(schematic),

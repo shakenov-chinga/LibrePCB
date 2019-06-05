@@ -194,7 +194,7 @@ BES_Base::ProcRetVal BES_DrawPlane::processIdleSceneEvent(
   QEvent* qevent = BEE_RedirectedQEvent::getQEventFromBEE(event);
   Q_ASSERT(qevent);
   if (!qevent) return PassToParentState;
-  Board* board = mEditor.getActiveBoard();
+  X_Board* board = mEditor.getActiveBoard();
   Q_ASSERT(board);
   if (!board) return PassToParentState;
 
@@ -238,7 +238,7 @@ BES_Base::ProcRetVal BES_DrawPlane::processPositioningSceneEvent(
   QEvent* qevent = BEE_RedirectedQEvent::getQEventFromBEE(event);
   Q_ASSERT(qevent);
   if (!qevent) return PassToParentState;
-  Board* board = mEditor.getActiveBoard();
+  X_Board* board = mEditor.getActiveBoard();
   Q_ASSERT(board);
   if (!board) return PassToParentState;
 
@@ -278,7 +278,7 @@ BES_Base::ProcRetVal BES_DrawPlane::processPositioningSceneEvent(
   return PassToParentState;
 }
 
-bool BES_DrawPlane::start(Board& board, const Point& pos) noexcept {
+bool BES_DrawPlane::start(X_Board& board, const Point& pos) noexcept {
   try {
     // start a new undo command
     Q_ASSERT(mSubState == SubState::Idle);
@@ -303,7 +303,7 @@ bool BES_DrawPlane::start(Board& board, const Point& pos) noexcept {
   }
 }
 
-bool BES_DrawPlane::addSegment(Board& board, const Point& pos) noexcept {
+bool BES_DrawPlane::addSegment(X_Board& board, const Point& pos) noexcept {
   Q_UNUSED(board);
   Q_ASSERT(mSubState == SubState::Positioning);
 
@@ -373,7 +373,7 @@ void BES_DrawPlane::layerComboBoxLayerChanged(
 
 void BES_DrawPlane::makeSelectedLayerVisible() noexcept {
   if (mCurrentPlane) {
-    Board&         board = mCurrentPlane->getBoard();
+    X_Board&         board = mCurrentPlane->getBoard();
     GraphicsLayer* layer = board.getLayerStack().getLayer(*mCurrentLayerName);
     if (layer && layer->isEnabled()) layer->setVisible(true);
   }

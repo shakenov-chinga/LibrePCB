@@ -48,7 +48,7 @@ class Footprint;
 namespace project {
 
 class Project;
-class Board;
+class X_Board;
 class ComponentInstance;
 class BI_Footprint;
 
@@ -70,9 +70,9 @@ public:
   // Constructors / Destructor
   BI_Device()                       = delete;
   BI_Device(const BI_Device& other) = delete;
-  BI_Device(Board& board, const BI_Device& other);
-  BI_Device(Board& board, const SExpression& node);
-  BI_Device(Board& board, ComponentInstance& compInstance,
+  BI_Device(X_Board& board, const BI_Device& other);
+  BI_Device(X_Board& board, const SExpression& node);
+  BI_Device(X_Board& board, ComponentInstance& compInstance,
             const Uuid& deviceUuid, const Uuid& footprintUuid,
             const Point& position, const Angle& rotation, bool mirror);
   ~BI_Device() noexcept;

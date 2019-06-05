@@ -1,15 +1,11 @@
-#include "x_schematic.h"
+#include "xbg_baseitem.h"
 
 namespace librepcb {
 
 namespace x_version {
 
-
-X_Schematic::X_Schematic(QObject *parent)
+XBG_BaseItem::XBG_BaseItem(GraphicsScene* parent)
   : QObject(parent) {
-}
-
-X_Schematic::~X_Schematic() {
 }
 
 } // namespace x_version

@@ -55,7 +55,7 @@ namespace editor {
  ******************************************************************************/
 
 CmdMoveSelectedBoardItems::CmdMoveSelectedBoardItems(
-    Board& board, const Point& startPos) noexcept
+    X_Board& board, const Point& startPos) noexcept
   : UndoCommandGroup(tr("Move Board Elements")),
     mBoard(board),
     mStartPos(startPos),

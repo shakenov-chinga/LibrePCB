@@ -41,20 +41,20 @@ namespace project {
  *  Constructors / Destructor
  ******************************************************************************/
 
-BoardUserSettings::BoardUserSettings(Board& board) noexcept
+BoardUserSettings::BoardUserSettings(X_Board& board) noexcept
   : QObject(&board),
     mBoard(board),
     mLayerSettings(
         new GraphicsLayerStackAppearanceSettings(board.getLayerStack())) {
 }
 
-BoardUserSettings::BoardUserSettings(Board&                   board,
+BoardUserSettings::BoardUserSettings(X_Board&                   board,
                                      const BoardUserSettings& other) noexcept
   : BoardUserSettings(board) {
   *mLayerSettings = *other.mLayerSettings;
 }
 
-BoardUserSettings::BoardUserSettings(Board& board, const SExpression& node)
+BoardUserSettings::BoardUserSettings(X_Board& board, const SExpression& node)
   : QObject(&board),
     mBoard(board),
     mLayerSettings(

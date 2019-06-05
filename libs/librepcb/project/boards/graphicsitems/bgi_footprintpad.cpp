@@ -88,9 +88,9 @@ void BGI_FootprintPad::updateCacheAndRepaint() noexcept {
   // set Z value
   if ((mLibPad.getBoardSide() == library::FootprintPad::BoardSide::BOTTOM) !=
       mPad.getIsMirrored()) {
-    setZValue(Board::ZValue_FootprintPadsBottom);
+    setZValue(X_Board::ZValue_FootprintPadsBottom);
   } else {
-    setZValue(Board::ZValue_FootprintPadsTop);
+    setZValue(X_Board::ZValue_FootprintPadsTop);
   }
 
   // set layers

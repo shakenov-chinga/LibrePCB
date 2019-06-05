@@ -44,7 +44,7 @@ class Symbol;
 
 namespace project {
 
-class Schematic;
+class X_Schematic;
 class ComponentInstance;
 class SI_Symbol;
 
@@ -60,7 +60,7 @@ namespace editor {
 class CmdAddSymbolToSchematic final : public UndoCommandGroup {
 public:
   // Constructors / Destructor
-  CmdAddSymbolToSchematic(workspace::Workspace& workspace, Schematic& schematic,
+  CmdAddSymbolToSchematic(workspace::Workspace& workspace, X_Schematic& schematic,
                           ComponentInstance& cmpInstance,
                           const Uuid&        symbolItem,
                           const Point&       position = Point(),
@@ -80,7 +80,7 @@ private:
 
   // Attributes from the constructor
   workspace::Workspace& mWorkspace;
-  Schematic&            mSchematic;
+  X_Schematic&            mSchematic;
   ComponentInstance&    mComponentInstance;
   Uuid                  mSymbolItemUuid;
   Point                 mPosition;

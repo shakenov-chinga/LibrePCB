@@ -40,7 +40,7 @@ namespace project {
  *  Constructors / Destructor
  ******************************************************************************/
 
-BI_Base::BI_Base(Board& board) noexcept
+BI_Base::BI_Base(X_Board& board) noexcept
   : QObject(&board), mBoard(board), mIsAddedToBoard(false), mIsSelected(false) {
 }
 

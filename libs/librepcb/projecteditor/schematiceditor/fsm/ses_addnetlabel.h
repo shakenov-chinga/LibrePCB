@@ -33,7 +33,7 @@
 namespace librepcb {
 namespace project {
 
-class Schematic;
+class X_Schematic;
 class SI_NetLabel;
 class CmdSchematicNetLabelEdit;
 
@@ -65,7 +65,7 @@ public:
 private:
   // Private Methods
   ProcRetVal processSceneEvent(SEE_Base* event) noexcept;
-  bool       addLabel(Schematic& schematic, const Point& pos) noexcept;
+  bool       addLabel(X_Schematic& schematic, const Point& pos) noexcept;
   bool       updateLabel(const Point& pos) noexcept;
   bool       fixLabel(const Point& pos) noexcept;
 

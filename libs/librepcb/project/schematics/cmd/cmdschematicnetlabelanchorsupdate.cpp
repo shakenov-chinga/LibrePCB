@@ -37,7 +37,7 @@ namespace project {
  ******************************************************************************/
 
 CmdSchematicNetLabelAnchorsUpdate::CmdSchematicNetLabelAnchorsUpdate(
-    Schematic& schematic) noexcept
+    X_Schematic& schematic) noexcept
   : UndoCommand(tr("Update netlabel anchors")), mSchematic(schematic) {
 }
 

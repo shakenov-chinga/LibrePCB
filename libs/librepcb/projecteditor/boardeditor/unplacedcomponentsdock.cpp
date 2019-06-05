@@ -135,7 +135,7 @@ int UnplacedComponentsDock::getUnplacedComponentsCount() const noexcept {
  *  Setters
  ******************************************************************************/
 
-void UnplacedComponentsDock::setBoard(Board* board) {
+void UnplacedComponentsDock::setBoard(X_Board* board) {
   // clean up
   mBoard = nullptr;
   disconnect(mBoardConnection1);
@@ -148,12 +148,12 @@ void UnplacedComponentsDock::setBoard(Board* board) {
   mBoard = board;
   if (board) {
     mBoardConnection1 =
-        connect(board, &Board::deviceAdded, [this](BI_Device& c) {
+        connect(board, &X_Board::deviceAdded, [this](BI_Device& c) {
           Q_UNUSED(c);
           updateComponentsList();
         });
     mBoardConnection2 =
-        connect(board, &Board::deviceRemoved, [this](BI_Device& c) {
+        connect(board, &X_Board::deviceRemoved, [this](BI_Device& c) {
           Q_UNUSED(c);
           updateComponentsList();
         });

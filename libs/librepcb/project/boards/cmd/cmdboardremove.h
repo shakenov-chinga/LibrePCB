@@ -34,7 +34,7 @@ namespace librepcb {
 namespace project {
 
 class Project;
-class Board;
+class X_Board;
 
 /*******************************************************************************
  *  Class CmdBoardRemove
@@ -46,7 +46,7 @@ class Board;
 class CmdBoardRemove final : public UndoCommand {
 public:
   // Constructors / Destructor
-  explicit CmdBoardRemove(Board& board) noexcept;
+  explicit CmdBoardRemove(X_Board& board) noexcept;
   ~CmdBoardRemove() noexcept;
 
 private:
@@ -63,7 +63,7 @@ private:
 
   // Private Member Variables
   Project& mProject;
-  Board&   mBoard;
+  X_Board&   mBoard;
   int      mIndex;
 };
 

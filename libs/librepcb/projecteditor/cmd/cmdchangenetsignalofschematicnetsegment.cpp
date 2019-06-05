@@ -121,7 +121,7 @@ void CmdChangeNetSignalOfSchematicNetSegment::changeNetSignalOfNetSegment() {
 void CmdChangeNetSignalOfSchematicNetSegment::updateCompSigInstNetSignal(
     ComponentSignalInstance& cmpSig) {
   // disconnect traces from pads in all boards
-  QHash<Board*, QSet<BI_NetLine*>> boardNetLinesToRemove;
+  QHash<X_Board*, QSet<BI_NetLine*>> boardNetLinesToRemove;
   foreach (BI_FootprintPad* pad, cmpSig.getRegisteredFootprintPads()) {
     Q_ASSERT(pad && pad->isAddedToBoard());
     boardNetLinesToRemove[&pad->getBoard()] += pad->getNetLines();

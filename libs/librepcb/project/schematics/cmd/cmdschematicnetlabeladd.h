@@ -35,7 +35,7 @@ namespace librepcb {
 namespace project {
 
 class NetSignal;
-class Schematic;
+class X_Schematic;
 class SI_NetLabel;
 class SI_NetSegment;
 

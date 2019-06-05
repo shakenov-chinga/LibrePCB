@@ -33,7 +33,7 @@
 namespace librepcb {
 namespace project {
 
-class Board;
+class X_Board;
 class BI_Device;
 
 /*******************************************************************************
@@ -64,7 +64,7 @@ private:
   // Private Member Variables
 
   // Attributes from the constructor
-  Board&     mBoard;
+  X_Board&     mBoard;
   BI_Device& mDevice;
 };
 

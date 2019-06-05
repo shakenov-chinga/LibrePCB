@@ -51,7 +51,7 @@ BGI_Via::BGI_Via(BI_Via& via) noexcept
     mViaLayer(nullptr),
     mTopStopMaskLayer(nullptr),
     mBottomStopMaskLayer(nullptr) {
-  setZValue(Board::ZValue_Vias);
+  setZValue(X_Board::ZValue_Vias);
 
   mFont = qApp->getDefaultSansSerifFont();
   mFont.setPixelSize(1);

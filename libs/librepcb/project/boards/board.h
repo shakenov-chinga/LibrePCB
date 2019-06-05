@@ -87,36 +87,6 @@ class Board final : public QObject,
   DECLARE_ERC_MSG_CLASS_NAME(Board)
 
 public:
-  // Types
-
-  /**
-   * @brief Z Values of all items in a board scene (to define the stacking
-   * order)
-   *
-   * These values are used for QGraphicsItem::setZValue() to define the stacking
-   * order of all items in a board QGraphicsScene. We use integer values, even
-   * if the z-value of QGraphicsItem is a qreal attribute...
-   *
-   * Low number = background, high number = foreground
-   */
-  enum ItemZValue {
-    ZValue_Default = 0,  ///< this is the default value (behind all other items)
-    ZValue_TextsBottom,  ///< Z value for librepcb::project::BI_StrokeText items
-    ZValue_FootprintsBottom,  ///< Z value for librepcb::project::BI_Footprint
-                              ///< items
-    ZValue_FootprintPadsBottom,  ///< Z value for
-                                 ///< librepcb::project::BI_FootprintPad items
-    ZValue_CopperBottom,
-    ZValue_CopperTop,
-    ZValue_FootprintPadsTop,  ///< Z value for
-                              ///< librepcb::project::BI_FootprintPad items
-    ZValue_FootprintsTop,     ///< Z value for librepcb::project::BI_Footprint
-                              ///< items
-    ZValue_TextsTop,  ///< Z value for librepcb::project::BI_StrokeText items
-    ZValue_Vias,      ///< Z value for librepcb::project::BI_Via items
-    ZValue_Texts,     ///< Z value for librepcb::project::BI_StrokeText items
-    ZValue_AirWires,  ///< Z value for librepcb::project::BI_AirWire items
-  };
 
   // Constructors / Destructor
   Board()                   = delete;

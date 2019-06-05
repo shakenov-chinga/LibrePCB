@@ -33,7 +33,7 @@ namespace librepcb {
 namespace project {
 
 class Project;
-class Board;
+class X_Board;
 
 namespace editor {
 
@@ -55,7 +55,7 @@ public:
   // Constructors / Destructor
   FabricationOutputDialog()                                     = delete;
   FabricationOutputDialog(const FabricationOutputDialog& other) = delete;
-  explicit FabricationOutputDialog(Board& board, QWidget* parent = 0);
+  explicit FabricationOutputDialog(X_Board& board, QWidget* parent = 0);
   ~FabricationOutputDialog();
 
 private slots:
@@ -69,7 +69,7 @@ private:
   QStringList getBotSilkscreenLayers() const noexcept;
 
   Project&                     mProject;
-  Board&                       mBoard;
+  X_Board&                       mBoard;
   Ui::FabricationOutputDialog* mUi;
 };
 

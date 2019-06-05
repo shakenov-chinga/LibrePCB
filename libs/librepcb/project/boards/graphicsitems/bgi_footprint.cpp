@@ -77,9 +77,9 @@ void BGI_Footprint::updateCacheAndRepaint() noexcept {
 
   // set Z value
   if (mFootprint.getIsMirrored())
-    setZValue(Board::ZValue_FootprintsBottom);
+    setZValue(X_Board::ZValue_FootprintsBottom);
   else
-    setZValue(Board::ZValue_FootprintsTop);
+    setZValue(X_Board::ZValue_FootprintsTop);
 
   // cross rect
   layer = getLayer(GraphicsLayer::sTopReferences);

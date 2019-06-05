@@ -34,7 +34,7 @@ namespace librepcb {
 namespace project {
 
 class NetSignal;
-class Board;
+class X_Board;
 
 /*******************************************************************************
  *  Class BoardAirWiresBuilder
@@ -48,7 +48,7 @@ public:
   // Constructors / Destructor
   BoardAirWiresBuilder()                                  = delete;
   BoardAirWiresBuilder(const BoardAirWiresBuilder& other) = delete;
-  BoardAirWiresBuilder(const Board& board, const NetSignal& netsignal) noexcept;
+  BoardAirWiresBuilder(const X_Board& board, const NetSignal& netsignal) noexcept;
   ~BoardAirWiresBuilder() noexcept;
 
   // General Methods
@@ -58,7 +58,7 @@ public:
   BoardAirWiresBuilder& operator=(const BoardAirWiresBuilder& rhs) = delete;
 
 private:  // Data
-  const Board&     mBoard;
+  const X_Board&     mBoard;
   const NetSignal& mNetSignal;
 };
 

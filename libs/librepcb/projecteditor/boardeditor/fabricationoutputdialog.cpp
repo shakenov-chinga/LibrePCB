@@ -44,7 +44,7 @@ namespace editor {
  *  Constructors / Destructor
  ******************************************************************************/
 
-FabricationOutputDialog::FabricationOutputDialog(Board& board, QWidget* parent)
+FabricationOutputDialog::FabricationOutputDialog(X_Board& board, QWidget* parent)
   : QDialog(parent),
     mProject(board.getProject()),
     mBoard(board),

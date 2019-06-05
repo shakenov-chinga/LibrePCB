@@ -34,7 +34,7 @@
 namespace librepcb {
 namespace project {
 
-class Board;
+class X_Board;
 
 /*******************************************************************************
  *  Class CmdBoardDesignRulesModify
@@ -48,7 +48,7 @@ public:
   // Constructors / Destructor
   CmdBoardDesignRulesModify()                                       = delete;
   CmdBoardDesignRulesModify(const CmdBoardDesignRulesModify& other) = delete;
-  CmdBoardDesignRulesModify(Board&                  board,
+  CmdBoardDesignRulesModify(X_Board&                  board,
                             const BoardDesignRules& newRules) noexcept;
   ~CmdBoardDesignRulesModify() noexcept;
 
@@ -65,7 +65,7 @@ private:
   void performRedo() override;
 
   // Attributes from the constructor
-  Board& mBoard;
+  X_Board& mBoard;
 
   // General Attributes
   BoardDesignRules mOldRules;

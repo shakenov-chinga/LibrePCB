@@ -42,22 +42,22 @@ namespace project {
  *  Constructors / Destructor
  ******************************************************************************/
 
-BI_Polygon::BI_Polygon(Board& board, const BI_Polygon& other) : BI_Base(board) {
+BI_Polygon::BI_Polygon(X_Board& board, const BI_Polygon& other) : BI_Base(board) {
   mPolygon.reset(new Polygon(Uuid::createRandom(), *other.mPolygon));
   init();
 }
 
-BI_Polygon::BI_Polygon(Board& board, const SExpression& node) : BI_Base(board) {
+BI_Polygon::BI_Polygon(X_Board& board, const SExpression& node) : BI_Base(board) {
   mPolygon.reset(new Polygon(node));
   init();
 }
 
-BI_Polygon::BI_Polygon(Board& board, const Polygon& polygon) : BI_Base(board) {
+BI_Polygon::BI_Polygon(X_Board& board, const Polygon& polygon) : BI_Base(board) {
   mPolygon.reset(new Polygon(polygon));
   init();
 }
 
-BI_Polygon::BI_Polygon(Board& board, const Uuid& uuid,
+BI_Polygon::BI_Polygon(X_Board& board, const Uuid& uuid,
                        const GraphicsLayerName& layerName,
                        const UnsignedLength& lineWidth, bool fill,
                        bool isGrabArea, const Path& path)
@@ -70,10 +70,10 @@ BI_Polygon::BI_Polygon(Board& board, const Uuid& uuid,
 void BI_Polygon::init() {
   mGraphicsItem.reset(
       new PolygonGraphicsItem(*mPolygon, mBoard.getLayerStack()));
-  mGraphicsItem->setZValue(Board::ZValue_Default);
+  mGraphicsItem->setZValue(X_Board::ZValue_Default);
 
   // connect to the "attributes changed" signal of the board
-  connect(&mBoard, &Board::attributesChanged, this,
+  connect(&mBoard, &X_Board::attributesChanged, this,
           &BI_Polygon::boardAttributesChanged);
 }
 

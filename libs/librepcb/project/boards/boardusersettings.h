@@ -36,7 +36,7 @@ class GraphicsLayerStackAppearanceSettings;
 
 namespace project {
 
-class Board;
+class X_Board;
 
 /*******************************************************************************
  *  Class BoardUserSettings
@@ -52,9 +52,9 @@ public:
   // Constructors / Destructor
   BoardUserSettings()                               = delete;
   BoardUserSettings(const BoardUserSettings& other) = delete;
-  explicit BoardUserSettings(Board& board) noexcept;
-  BoardUserSettings(Board& board, const BoardUserSettings& other) noexcept;
-  BoardUserSettings(Board& board, const SExpression& node);
+  explicit BoardUserSettings(X_Board& board) noexcept;
+  BoardUserSettings(X_Board& board, const BoardUserSettings& other) noexcept;
+  BoardUserSettings(X_Board& board, const SExpression& node);
   ~BoardUserSettings() noexcept;
 
   // General Methods
@@ -67,7 +67,7 @@ public:
 
 private:  // Methods
   // General
-  Board&                                               mBoard;
+  X_Board&                                               mBoard;
   QScopedPointer<GraphicsLayerStackAppearanceSettings> mLayerSettings;
 };
 

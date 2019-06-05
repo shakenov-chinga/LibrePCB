@@ -78,7 +78,7 @@ namespace editor {
  ******************************************************************************/
 
 CmdRemoveSelectedSchematicItems::CmdRemoveSelectedSchematicItems(
-    Schematic& schematic) noexcept
+    X_Schematic& schematic) noexcept
   : UndoCommandGroup(tr("Remove Schematic Elements")), mSchematic(schematic) {
 }
 
@@ -344,7 +344,7 @@ void CmdRemoveSelectedSchematicItems::removeSymbol(SI_Symbol& symbol) {
   // do we also need to remove the component instance?
   ComponentInstance& component = symbol.getComponentInstance();
   if (component.getPlacedSymbolsCount() == 0) {
-    foreach (Board* board, mSchematic.getProject().getBoards()) {
+    foreach (X_Board* board, mSchematic.getProject().getBoards()) {
       BI_Device* device =
           board->getDeviceInstanceByComponentUuid(component.getUuid());
       if (device) {
@@ -363,7 +363,7 @@ void CmdRemoveSelectedSchematicItems::removeSymbol(SI_Symbol& symbol) {
 void CmdRemoveSelectedSchematicItems::disconnectComponentSignalInstance(
     ComponentSignalInstance& signal) {
   // disconnect traces from pads in all boards
-  QHash<Board*, QSet<BI_NetLine*>> boardNetLinesToRemove;
+  QHash<X_Board*, QSet<BI_NetLine*>> boardNetLinesToRemove;
   foreach (BI_FootprintPad* pad, signal.getRegisteredFootprintPads()) {
     Q_ASSERT(pad);
     boardNetLinesToRemove[&pad->getBoard()] += pad->getNetLines();

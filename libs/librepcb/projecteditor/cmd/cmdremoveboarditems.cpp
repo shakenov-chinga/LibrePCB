@@ -60,7 +60,7 @@ namespace editor {
  *  Constructors / Destructor
  ******************************************************************************/
 
-CmdRemoveBoardItems::CmdRemoveBoardItems(Board& board) noexcept
+CmdRemoveBoardItems::CmdRemoveBoardItems(X_Board& board) noexcept
   : UndoCommandGroup(tr("Remove Board Items")), mBoard(board) {
 }
 

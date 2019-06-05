@@ -43,7 +43,7 @@ class PolygonGraphicsItem;
 namespace project {
 
 class Project;
-class Board;
+class X_Board;
 class BGI_Polygon;
 
 /*******************************************************************************
@@ -60,10 +60,10 @@ public:
   // Constructors / Destructor
   BI_Polygon()                        = delete;
   BI_Polygon(const BI_Polygon& other) = delete;
-  BI_Polygon(Board& board, const BI_Polygon& other);
-  BI_Polygon(Board& board, const SExpression& node);
-  BI_Polygon(Board& board, const Polygon& polygon);
-  BI_Polygon(Board& board, const Uuid& uuid, const GraphicsLayerName& layerName,
+  BI_Polygon(X_Board& board, const BI_Polygon& other);
+  BI_Polygon(X_Board& board, const SExpression& node);
+  BI_Polygon(X_Board& board, const Polygon& polygon);
+  BI_Polygon(X_Board& board, const Uuid& uuid, const GraphicsLayerName& layerName,
              const UnsignedLength& lineWidth, bool fill, bool isGrabArea,
              const Path& path);
   ~BI_Polygon() noexcept;

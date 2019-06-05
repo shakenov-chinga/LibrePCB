@@ -237,7 +237,7 @@ SES_Base::ProcRetVal SES_AddComponent::processSceneEvent(
   QEvent* qevent = SEE_RedirectedQEvent::getQEventFromSEE(event);
   Q_ASSERT(qevent);
   if (!qevent) return PassToParentState;
-  Schematic* schematic = mEditor.getActiveSchematic();
+  X_Schematic* schematic = mEditor.getActiveSchematic();
   Q_ASSERT(schematic);
   if (!schematic) return PassToParentState;
   if (!mIsUndoCmdActive) return PassToParentState;  // temporary
@@ -366,7 +366,7 @@ SES_Base::ProcRetVal SES_AddComponent::processSceneEvent(
 void SES_AddComponent::startAddingComponent(const tl::optional<Uuid>& cmp,
                                             const tl::optional<Uuid>& symbVar,
                                             bool keepValue) {
-  Schematic* schematic = mEditor.getActiveSchematic();
+  X_Schematic* schematic = mEditor.getActiveSchematic();
   Q_ASSERT(schematic);
   if (!schematic) throw LogicError(__FILE__, __LINE__);
 

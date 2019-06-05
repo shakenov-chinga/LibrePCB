@@ -150,7 +150,7 @@ static QVector<QPair<Point, Point>> kruskalMst(
  *  Constructors / Destructor
  ******************************************************************************/
 
-BoardAirWiresBuilder::BoardAirWiresBuilder(const Board&     board,
+BoardAirWiresBuilder::BoardAirWiresBuilder(const X_Board&     board,
                                            const NetSignal& netsignal) noexcept
   : mBoard(board), mNetSignal(netsignal) {
 }

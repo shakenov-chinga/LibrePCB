@@ -34,7 +34,7 @@ namespace librepcb {
 namespace project {
 
 class Project;
-class Schematic;
+class X_Schematic;
 
 /*******************************************************************************
  *  Class CmdSchematicRemove
@@ -46,7 +46,7 @@ class Schematic;
 class CmdSchematicRemove final : public UndoCommand {
 public:
   // Constructors / Destructor
-  CmdSchematicRemove(Project& project, Schematic& schematic) noexcept;
+  CmdSchematicRemove(Project& project, X_Schematic& schematic) noexcept;
   ~CmdSchematicRemove() noexcept;
 
 private:
@@ -64,7 +64,7 @@ private:
   // Private Member Variables
 
   Project&   mProject;
-  Schematic& mSchematic;
+  X_Schematic& mSchematic;
   int        mPageIndex;
 };
 

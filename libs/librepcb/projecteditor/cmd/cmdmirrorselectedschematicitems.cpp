@@ -50,7 +50,7 @@ namespace editor {
  ******************************************************************************/
 
 CmdMirrorSelectedSchematicItems::CmdMirrorSelectedSchematicItems(
-    Schematic& schematic, Qt::Orientation orientation) noexcept
+    X_Schematic& schematic, Qt::Orientation orientation) noexcept
   : UndoCommandGroup(tr("Mirror Schematic Elements")),
     mSchematic(schematic),
     mOrientation(orientation) {

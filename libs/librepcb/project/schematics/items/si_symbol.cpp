@@ -46,7 +46,7 @@ namespace project {
  *  Constructors / Destructor
  ******************************************************************************/
 
-SI_Symbol::SI_Symbol(Schematic& schematic, const SExpression& node)
+SI_Symbol::SI_Symbol(X_Schematic& schematic, const SExpression& node)
   : SI_Base(schematic),
     mComponentInstance(nullptr),
     mSymbVarItem(nullptr),
@@ -68,7 +68,7 @@ SI_Symbol::SI_Symbol(Schematic& schematic, const SExpression& node)
   init(symbVarItemUuid);
 }
 
-SI_Symbol::SI_Symbol(Schematic& schematic, ComponentInstance& cmpInstance,
+SI_Symbol::SI_Symbol(X_Schematic& schematic, ComponentInstance& cmpInstance,
                      const Uuid& symbolItem, const Point& position,
                      const Angle& rotation, bool mirrored)
   : SI_Base(schematic),

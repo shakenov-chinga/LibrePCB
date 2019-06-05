@@ -39,7 +39,7 @@ class CmdHoleEdit;
 
 namespace project {
 
-class Board;
+class X_Board;
 class CmdDeviceInstanceEdit;
 class CmdBoardViaEdit;
 class CmdBoardNetPointEdit;
@@ -57,7 +57,7 @@ namespace editor {
 class CmdMoveSelectedBoardItems final : public UndoCommandGroup {
 public:
   // Constructors / Destructor
-  CmdMoveSelectedBoardItems(Board& board, const Point& startPos) noexcept;
+  CmdMoveSelectedBoardItems(X_Board& board, const Point& startPos) noexcept;
   ~CmdMoveSelectedBoardItems() noexcept;
 
   // General Methods
@@ -70,7 +70,7 @@ private:
   bool performExecute() override;
 
   // Private Member Variables
-  Board& mBoard;
+  X_Board& mBoard;
   Point  mStartPos;
   Point  mDeltaPos;
 

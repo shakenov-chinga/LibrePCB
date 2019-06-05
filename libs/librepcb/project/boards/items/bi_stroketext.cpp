@@ -45,7 +45,7 @@ namespace project {
  *  Constructors / Destructor
  ******************************************************************************/
 
-BI_StrokeText::BI_StrokeText(Board& board, const BI_StrokeText& other)
+BI_StrokeText::BI_StrokeText(X_Board& board, const BI_StrokeText& other)
   : BI_Base(board),
     mFootprint(nullptr),
     mOnStrokeTextEditedSlot(*this, &BI_StrokeText::strokeTextEdited) {
@@ -53,7 +53,7 @@ BI_StrokeText::BI_StrokeText(Board& board, const BI_StrokeText& other)
   init();
 }
 
-BI_StrokeText::BI_StrokeText(Board& board, const SExpression& node)
+BI_StrokeText::BI_StrokeText(X_Board& board, const SExpression& node)
   : BI_Base(board),
     mFootprint(nullptr),
     mOnStrokeTextEditedSlot(*this, &BI_StrokeText::strokeTextEdited) {
@@ -61,7 +61,7 @@ BI_StrokeText::BI_StrokeText(Board& board, const SExpression& node)
   init();
 }
 
-BI_StrokeText::BI_StrokeText(Board& board, const StrokeText& text)
+BI_StrokeText::BI_StrokeText(X_Board& board, const StrokeText& text)
   : BI_Base(board),
     mFootprint(nullptr),
     mOnStrokeTextEditedSlot(*this, &BI_StrokeText::strokeTextEdited) {
@@ -81,7 +81,7 @@ void BI_StrokeText::init() {
   updateGraphicsItems();
 
   // connect to the "attributes changed" signal of the board
-  connect(&mBoard, &Board::attributesChanged, this,
+  connect(&mBoard, &X_Board::attributesChanged, this,
           &BI_StrokeText::boardAttributesChanged);
 }
 
@@ -99,11 +99,11 @@ void BI_StrokeText::setFootprint(BI_Footprint* footprint) noexcept {
 
 void BI_StrokeText::updateGraphicsItems() noexcept {
   // update z-value
-  Board::ItemZValue zValue = Board::ZValue_Texts;
+  X_Board::ItemZValue zValue = X_Board::ZValue_Texts;
   if (GraphicsLayer::isTopLayer(*mText->getLayerName())) {
-    zValue = Board::ZValue_TextsTop;
+    zValue = X_Board::ZValue_TextsTop;
   } else if (GraphicsLayer::isBottomLayer(*mText->getLayerName())) {
-    zValue = Board::ZValue_TextsBottom;
+    zValue = X_Board::ZValue_TextsBottom;
   }
   mGraphicsItem->setZValue(static_cast<qreal>(zValue));
   mAnchorGraphicsItem->setZValue(static_cast<qreal>(zValue));

@@ -75,21 +75,21 @@ private:
   ProcRetVal processSubStateMoving(BEE_Base* event) noexcept;
   ProcRetVal processSubStateMovingSceneEvent(BEE_Base* event) noexcept;
   ProcRetVal proccessIdleSceneLeftClick(QGraphicsSceneMouseEvent* mouseEvent,
-                                        Board& board) noexcept;
+                                        X_Board& board) noexcept;
   ProcRetVal proccessIdleSceneRightMouseButtonReleased(
-      QGraphicsSceneMouseEvent* mouseEvent, Board* board) noexcept;
+      QGraphicsSceneMouseEvent* mouseEvent, X_Board* board) noexcept;
   ProcRetVal proccessIdleSceneDoubleClick(QGraphicsSceneMouseEvent* mouseEvent,
-                                          Board* board) noexcept;
-  bool startMovingSelectedItems(Board& board, const Point& startPos) noexcept;
+                                          X_Board* board) noexcept;
+  bool startMovingSelectedItems(X_Board& board, const Point& startPos) noexcept;
   bool rotateSelectedItems(const Angle& angle) noexcept;
   bool flipSelectedItems(Qt::Orientation orientation) noexcept;
   bool removeSelectedItems() noexcept;
   void openDevicePropertiesDialog(BI_Device& device) noexcept;
   void openViaPropertiesDialog(BI_Via& via) noexcept;
   void openPlanePropertiesDialog(BI_Plane& plane) noexcept;
-  void openPolygonPropertiesDialog(Board& board, Polygon& polygon) noexcept;
-  void openStrokeTextPropertiesDialog(Board& board, StrokeText& text) noexcept;
-  void openHolePropertiesDialog(Board& board, Hole& hole) noexcept;
+  void openPolygonPropertiesDialog(X_Board& board, Polygon& polygon) noexcept;
+  void openStrokeTextPropertiesDialog(X_Board& board, StrokeText& text) noexcept;
+  void openHolePropertiesDialog(X_Board& board, Hole& hole) noexcept;
 
   // Types
   /// enum for all possible substates

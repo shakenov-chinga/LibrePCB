@@ -43,16 +43,20 @@ namespace librepcb {
 
 class StrokeFontPool;
 
+namespace x_version{
+class X_Schematic;
+class X_Board;
+}
+using namespace x_version;
+
 namespace project {
 
 class ProjectMetadata;
 class ProjectSettings;
 class ProjectLibrary;
 class Circuit;
-class Schematic;
 class SchematicLayerProvider;
 class ErcMsgList;
-class Board;
 
 /*******************************************************************************
  *  Class Project
@@ -184,14 +188,14 @@ public:
    *
    * @return the schematic index (-1 if the schematic does not exist)
    */
-  int getSchematicIndex(const Schematic& schematic) const noexcept;
+  int getSchematicIndex(const X_Schematic& schematic) const noexcept;
 
   /**
    * @brief Get all schematics
    *
    * @return A QList with all schematics
    */
-  const QList<Schematic*>& getSchematics() const noexcept {
+  const QList<X_Schematic*>& getSchematics() const noexcept {
     return mSchematics;
   }
 
@@ -203,7 +207,7 @@ public:
    * @return A pointer to the specified schematic, or nullptr if index is
    * invalid
    */
-  Schematic* getSchematicByIndex(int index) const noexcept {
+  X_Schematic* getSchematicByIndex(int index) const noexcept {
     return mSchematics.value(index, nullptr);
   }
 
@@ -214,7 +218,7 @@ public:
    *
    * @return A pointer to the specified schematic, or nullptr if uuid is invalid
    */
-  Schematic* getSchematicByUuid(const Uuid& uuid) const noexcept;
+  X_Schematic* getSchematicByUuid(const Uuid& uuid) const noexcept;
 
   /**
    * @brief Get the schematic page with a specific name
@@ -223,7 +227,7 @@ public:
    *
    * @return A pointer to the specified schematic, or nullptr if name is invalid
    */
-  Schematic* getSchematicByName(const QString& name) const noexcept;
+  X_Schematic* getSchematicByName(const QString& name) const noexcept;
 
   /**
    * @brief Create a new schematic (page)
@@ -234,7 +238,7 @@ public:
    *
    * @throw Exception This method throws an exception on error.
    */
-  Schematic* createSchematic(const ElementName& name);
+  X_Schematic* createSchematic(const ElementName& name);
 
   /**
    * @brief Add an existing schematic to this project
@@ -246,7 +250,7 @@ public:
    *
    * @undocmd{project#CmdSchematicAdd}
    */
-  void addSchematic(Schematic& schematic, int newIndex = -1);
+  void addSchematic(X_Schematic& schematic, int newIndex = -1);
 
   /**
    * @brief Remove a schematic from this project
@@ -260,7 +264,7 @@ public:
    *
    * @undocmd{project#CmdSchematicRemove}
    */
-  void removeSchematic(Schematic& schematic, bool deleteSchematic = false);
+  void removeSchematic(X_Schematic& schematic, bool deleteSchematic = false);
 
   /**
    * @brief Export the schematic pages as a PDF
@@ -482,8 +486,8 @@ private:
   QScopedPointer<Circuit>
       mCircuit;  ///< The whole circuit of this project (contains all
                  ///< netclasses, netsignals, component instances, ...)
-  QList<Schematic*> mSchematics;  ///< All schematics of this project
-  QList<Schematic*>
+  QList<X_Schematic*> mSchematics;  ///< All schematics of this project
+  QList<X_Schematic*>
       mRemovedSchematics;  ///< All removed schematics of this project
   QScopedPointer<SchematicLayerProvider>
                 mSchematicLayerProvider;  ///< All schematic layers of this project

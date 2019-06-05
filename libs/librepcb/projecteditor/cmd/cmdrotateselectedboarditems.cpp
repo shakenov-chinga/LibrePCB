@@ -57,7 +57,7 @@ namespace editor {
  ******************************************************************************/
 
 CmdRotateSelectedBoardItems::CmdRotateSelectedBoardItems(
-    Board& board, const Angle& angle) noexcept
+    X_Board& board, const Angle& angle) noexcept
   : UndoCommandGroup(tr("Rotate Board Elements")),
     mBoard(board),
     mAngle(angle) {

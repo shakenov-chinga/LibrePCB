@@ -33,7 +33,7 @@
 namespace librepcb {
 namespace project {
 
-class Schematic;
+class X_Schematic;
 
 /*******************************************************************************
  *  Class CmdSchematicNetLabelAnchorsUpdate
@@ -48,7 +48,7 @@ class Schematic;
 class CmdSchematicNetLabelAnchorsUpdate final : public UndoCommand {
 public:
   // Constructors / Destructor
-  CmdSchematicNetLabelAnchorsUpdate(Schematic& schematic) noexcept;
+  CmdSchematicNetLabelAnchorsUpdate(X_Schematic& schematic) noexcept;
   ~CmdSchematicNetLabelAnchorsUpdate() noexcept;
 
 private:
@@ -64,7 +64,7 @@ private:
   void performRedo() override;
 
   // Private Member Variables
-  Schematic& mSchematic;
+  X_Schematic& mSchematic;
 };
 
 /*******************************************************************************

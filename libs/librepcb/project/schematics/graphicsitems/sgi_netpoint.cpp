@@ -46,7 +46,7 @@ QRectF SGI_NetPoint::sBoundingRect;
 
 SGI_NetPoint::SGI_NetPoint(SI_NetPoint& netpoint) noexcept
   : SGI_Base(), mNetPoint(netpoint), mLayer(nullptr) {
-  setZValue(Schematic::ZValue_VisibleNetPoints);
+  setZValue(X_Schematic::ZValue_VisibleNetPoints);
 
   mLayer = getLayer(GraphicsLayer::sSchematicNetLines);
   Q_ASSERT(mLayer);
@@ -72,8 +72,8 @@ void SGI_NetPoint::updateCacheAndRepaint() noexcept {
   prepareGeometryChange();
   mIsVisibleJunction = mNetPoint.isVisibleJunction();
   mIsOpenLineEnd     = mNetPoint.isOpenLineEnd();
-  setZValue(mIsVisibleJunction ? Schematic::ZValue_VisibleNetPoints
-                               : Schematic::ZValue_HiddenNetPoints);
+  setZValue(mIsVisibleJunction ? X_Schematic::ZValue_VisibleNetPoints
+                               : X_Schematic::ZValue_HiddenNetPoints);
   update();
 }
 

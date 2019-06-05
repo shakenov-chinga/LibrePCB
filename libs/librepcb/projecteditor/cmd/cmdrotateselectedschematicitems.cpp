@@ -50,7 +50,7 @@ namespace editor {
  ******************************************************************************/
 
 CmdRotateSelectedSchematicItems::CmdRotateSelectedSchematicItems(
-    Schematic& schematic, const Angle& angle) noexcept
+    X_Schematic& schematic, const Angle& angle) noexcept
   : UndoCommandGroup(tr("Rotate Schematic Elements")),
     mSchematic(schematic),
     mAngle(angle) {

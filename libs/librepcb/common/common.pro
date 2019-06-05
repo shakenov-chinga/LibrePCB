@@ -129,28 +129,40 @@ SOURCES += \
     widgets/signalrolecombobox.cpp \
     widgets/statusbar.cpp \
     widgets/tabwidget.cpp \
-    items/xs_baseitem.cpp \
-    items/xs_circle.cpp \
-    items/x_board.cpp \
-    items/x_schematic.cpp \
-    items/xb_baseitem.cpp \
-    items/xb_device.cpp \
-    items/xb_circle.cpp \
-    items/xb_footprint.cpp \
-    items/xb_hole.cpp \
-    items/xb_padpth.cpp \
-    items/xb_padsmd.cpp \
-    items/xb_path.cpp \
-    items/xb_polygon.cpp \
-    items/xb_text.cpp \
-    items/xb_via.cpp \
-    items/xs_path.cpp \
-    items/xs_pin.cpp \
-    items/xs_polygon.cpp \
-    items/xs_text.cpp \
-    items/xs_symbol.cpp \
-    items/xs_line.cpp \
-    items/xb_line.cpp
+    x_version/xs_baseitem.cpp \
+    x_version/xs_circle.cpp \
+    x_version/x_board.cpp \
+    x_version/x_schematic.cpp \
+    x_version/xb_baseitem.cpp \
+    x_version/xb_device.cpp \
+    x_version/xb_circle.cpp \
+    x_version/xb_footprint.cpp \
+    x_version/xb_hole.cpp \
+    x_version/xb_padpth.cpp \
+    x_version/xb_padsmd.cpp \
+    x_version/xb_path.cpp \
+    x_version/xb_polygon.cpp \
+    x_version/xb_text.cpp \
+    x_version/xb_via.cpp \
+    x_version/xs_path.cpp \
+    x_version/xs_pin.cpp \
+    x_version/xs_polygon.cpp \
+    x_version/xs_text.cpp \
+    x_version/xs_symbol.cpp \
+    x_version/xs_line.cpp \
+    x_version/xb_line.cpp \
+    x_version/xbg_baseitem.cpp \
+    x_version/xbg_circle.cpp \
+    x_version/xbg_footprint.cpp \
+    x_version/xbg_hole.cpp \
+    x_version/xbg_line.cpp \
+    x_version/xbg_path.cpp \
+    x_version/xbg_polygon.cpp \
+    x_version/xbg_text.cpp \
+    x_version/xbg_via.cpp \
+    x_version/xbg_padpth.cpp \
+    x_version/xbg_padsmd.cpp \
+    x_version/xbg_point.cpp
 
 HEADERS += \
     alignment.h \
@@ -271,29 +283,41 @@ HEADERS += \
     widgets/signalrolecombobox.h \
     widgets/statusbar.h \
     widgets/tabwidget.h \
-    items/xs_baseitem.h \
-    items/xs_circle.h \
-    items/x_board.h \
-    items/x_schematic.h \
-    items/xb_baseitem.h \
-    items/xb_device.h \
-    items/xb_circle.h \
-    items/xb_footprint.h \
-    items/xb_hole.h \
-    items/xb_padpth.h \
-    items/xb_padsmd.h \
-    items/xb_path.h \
-    items/xb_polygon.h \
-    items/xb_text.h \
-    items/xb_via.h \
-    items/xs_path.h \
-    items/xs_pin.h \
-    items/xs_polygon.h \
-    items/xs_text.h \
-    items/xs_symbol.h \
-    items/x_textalign.h \
-    items/xs_line.h \
-    items/xb_line.h
+    x_version/xs_baseitem.h \
+    x_version/xs_circle.h \
+    x_version/x_board.h \
+    x_version/x_schematic.h \
+    x_version/xb_baseitem.h \
+    x_version/xb_device.h \
+    x_version/xb_circle.h \
+    x_version/xb_footprint.h \
+    x_version/xb_hole.h \
+    x_version/xb_padpth.h \
+    x_version/xb_padsmd.h \
+    x_version/xb_path.h \
+    x_version/xb_polygon.h \
+    x_version/xb_text.h \
+    x_version/xb_via.h \
+    x_version/xs_path.h \
+    x_version/xs_pin.h \
+    x_version/xs_polygon.h \
+    x_version/xs_text.h \
+    x_version/xs_symbol.h \
+    x_version/x_textalign.h \
+    x_version/xs_line.h \
+    x_version/xb_line.h \
+    x_version/xbg_baseitem.h \
+    x_version/xbg_circle.h \
+    x_version/xbg_footprint.h \
+    x_version/xbg_hole.h \
+    x_version/xbg_line.h \
+    x_version/xbg_path.h \
+    x_version/xbg_polygon.h \
+    x_version/xbg_text.h \
+    x_version/xbg_via.h \
+    x_version/xbg_padpth.h \
+    x_version/xbg_padsmd.h \
+    x_version/xbg_point.h
 
 FORMS += \
     dialogs/aboutdialog.ui \

@@ -36,7 +36,7 @@ namespace project {
  *  Constructors / Destructor
  ******************************************************************************/
 
-BoardLayerStack::BoardLayerStack(Board& board, const BoardLayerStack& other)
+BoardLayerStack::BoardLayerStack(X_Board& board, const BoardLayerStack& other)
   : QObject(&board),
     mBoard(board),
     mLayersChanged(false),
@@ -45,11 +45,11 @@ BoardLayerStack::BoardLayerStack(Board& board, const BoardLayerStack& other)
     addLayer(new GraphicsLayer(*layer));
   }
 
-  connect(&mBoard, &Board::attributesChanged, this,
+  connect(&mBoard, &X_Board::attributesChanged, this,
           &BoardLayerStack::boardAttributesChanged, Qt::QueuedConnection);
 }
 
-BoardLayerStack::BoardLayerStack(Board& board, const SExpression& node)
+BoardLayerStack::BoardLayerStack(X_Board& board, const SExpression& node)
   : QObject(&board),
     mBoard(board),
     mLayersChanged(false),
@@ -58,11 +58,11 @@ BoardLayerStack::BoardLayerStack(Board& board, const SExpression& node)
 
   setInnerLayerCount(node.getValueByPath<uint>("inner"));
 
-  connect(&mBoard, &Board::attributesChanged, this,
+  connect(&mBoard, &X_Board::attributesChanged, this,
           &BoardLayerStack::boardAttributesChanged, Qt::QueuedConnection);
 }
 
-BoardLayerStack::BoardLayerStack(Board& board)
+BoardLayerStack::BoardLayerStack(X_Board& board)
   : QObject(&board),
     mBoard(board),
     mLayersChanged(false),
@@ -71,7 +71,7 @@ BoardLayerStack::BoardLayerStack(Board& board)
 
   setInnerLayerCount(0);
 
-  connect(&mBoard, &Board::attributesChanged, this,
+  connect(&mBoard, &X_Board::attributesChanged, this,
           &BoardLayerStack::boardAttributesChanged, Qt::QueuedConnection);
 }
 

@@ -48,7 +48,7 @@ namespace project {
  *  Constructors / Destructor
  ******************************************************************************/
 
-SI_NetSegment::SI_NetSegment(Schematic& schematic, const SExpression& node)
+SI_NetSegment::SI_NetSegment(X_Schematic& schematic, const SExpression& node)
   : SI_Base(schematic),
     mUuid(node.getChildByIndex(0).getValue<Uuid>()),
     mNetSignal(nullptr) {
@@ -120,7 +120,7 @@ SI_NetSegment::SI_NetSegment(Schematic& schematic, const SExpression& node)
   }
 }
 
-SI_NetSegment::SI_NetSegment(Schematic& schematic, NetSignal& signal)
+SI_NetSegment::SI_NetSegment(X_Schematic& schematic, NetSignal& signal)
   : SI_Base(schematic), mUuid(Uuid::createRandom()), mNetSignal(&signal) {
 }
 

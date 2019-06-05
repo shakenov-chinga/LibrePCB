@@ -133,7 +133,7 @@ SES_Base::ProcRetVal SES_Select::processSubStateIdleSceneEvent(
   QEvent* qevent = SEE_RedirectedQEvent::getQEventFromSEE(event);
   Q_ASSERT(qevent);
   if (!qevent) return PassToParentState;
-  Schematic* schematic = mEditor.getActiveSchematic();
+  X_Schematic* schematic = mEditor.getActiveSchematic();
   Q_ASSERT(schematic);
   if (!schematic) return PassToParentState;
 
@@ -199,7 +199,7 @@ SES_Base::ProcRetVal SES_Select::processSubStateIdleSceneEvent(
 }
 
 SES_Base::ProcRetVal SES_Select::proccessIdleSceneLeftClick(
-    QGraphicsSceneMouseEvent* mouseEvent, Schematic& schematic) noexcept {
+    QGraphicsSceneMouseEvent* mouseEvent, X_Schematic& schematic) noexcept {
   // handle items selection
   QList<SI_Base*> items =
       schematic.getItemsAtScenePos(Point::fromPx(mouseEvent->scenePos()));
@@ -229,7 +229,7 @@ SES_Base::ProcRetVal SES_Select::proccessIdleSceneLeftClick(
 }
 
 SES_Base::ProcRetVal SES_Select::proccessIdleSceneRightMouseButtonReleased(
-    QGraphicsSceneMouseEvent* mouseEvent, Schematic* schematic) noexcept {
+    QGraphicsSceneMouseEvent* mouseEvent, X_Schematic* schematic) noexcept {
   // handle item selection
   QList<SI_Base*> items =
       schematic->getItemsAtScenePos(Point::fromPx(mouseEvent->scenePos()));
@@ -299,7 +299,7 @@ SES_Base::ProcRetVal SES_Select::proccessIdleSceneRightMouseButtonReleased(
 }
 
 SES_Base::ProcRetVal SES_Select::proccessIdleSceneDoubleClick(
-    QGraphicsSceneMouseEvent* mouseEvent, Schematic* schematic) noexcept {
+    QGraphicsSceneMouseEvent* mouseEvent, X_Schematic* schematic) noexcept {
   if (mouseEvent->button() == Qt::LeftButton) {
     // check if there is an element under the mouse
     QList<SI_Base*> items =
@@ -407,7 +407,7 @@ SES_Base::ProcRetVal SES_Select::processSubStateMovingSceneEvent(
   return PassToParentState;
 }
 
-bool SES_Select::startMovingSelectedItems(Schematic&   schematic,
+bool SES_Select::startMovingSelectedItems(X_Schematic&   schematic,
                                           const Point& startPos) noexcept {
   Q_ASSERT(mSelectedItemsMoveCommand.isNull());
   mSelectedItemsMoveCommand.reset(
@@ -417,7 +417,7 @@ bool SES_Select::startMovingSelectedItems(Schematic&   schematic,
 }
 
 bool SES_Select::rotateSelectedItems(const Angle& angle) noexcept {
-  Schematic* schematic = mEditor.getActiveSchematic();
+  X_Schematic* schematic = mEditor.getActiveSchematic();
   Q_ASSERT(schematic);
   if (!schematic) return false;
 
@@ -433,7 +433,7 @@ bool SES_Select::rotateSelectedItems(const Angle& angle) noexcept {
 }
 
 bool SES_Select::mirrorSelectedItems() noexcept {
-  Schematic* schematic = mEditor.getActiveSchematic();
+  X_Schematic* schematic = mEditor.getActiveSchematic();
   Q_ASSERT(schematic);
   if (!schematic) return false;
 
@@ -449,7 +449,7 @@ bool SES_Select::mirrorSelectedItems() noexcept {
 }
 
 bool SES_Select::removeSelectedItems() noexcept {
-  Schematic* schematic = mEditor.getActiveSchematic();
+  X_Schematic* schematic = mEditor.getActiveSchematic();
   Q_ASSERT(schematic);
   if (!schematic) return false;
 

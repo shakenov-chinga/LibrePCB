@@ -37,7 +37,7 @@ namespace project {
  *  Constructors / Destructor
  ******************************************************************************/
 
-CmdBoardRemove::CmdBoardRemove(Board& board) noexcept
+CmdBoardRemove::CmdBoardRemove(X_Board& board) noexcept
   : UndoCommand(tr("Remove board")),
     mProject(board.getProject()),
     mBoard(board),

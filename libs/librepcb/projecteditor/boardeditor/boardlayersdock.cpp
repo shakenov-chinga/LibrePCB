@@ -57,7 +57,7 @@ BoardLayersDock::~BoardLayersDock() noexcept {
  *  Setters
  ******************************************************************************/
 
-void BoardLayersDock::setActiveBoard(Board* board) {
+void BoardLayersDock::setActiveBoard(X_Board* board) {
   if (mActiveBoard) {
     disconnect(mActiveBoardConnection);
   }
@@ -65,7 +65,7 @@ void BoardLayersDock::setActiveBoard(Board* board) {
   mActiveBoard = board;
 
   if (mActiveBoard) {
-    mActiveBoardConnection = connect(mActiveBoard, &Board::attributesChanged,
+    mActiveBoardConnection = connect(mActiveBoard, &X_Board::attributesChanged,
                                      this, &BoardLayersDock::updateListWidget);
   }
 

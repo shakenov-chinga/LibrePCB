@@ -96,7 +96,7 @@ BES_Base::ProcRetVal BES_AddStrokeText::process(BEE_Base* event) noexcept {
 
 bool BES_AddStrokeText::entry(BEE_Base* event) noexcept {
   Q_UNUSED(event);
-  Board* board = mEditor.getActiveBoard();
+  X_Board* board = mEditor.getActiveBoard();
   if (!board) return false;
 
   // clear board selection because selection does not make sense in this state
@@ -217,7 +217,7 @@ BES_Base::ProcRetVal BES_AddStrokeText::processSceneEvent(
   QEvent* qevent = BEE_RedirectedQEvent::getQEventFromBEE(event);
   Q_ASSERT(qevent);
   if (!qevent) return PassToParentState;
-  Board* board = mEditor.getActiveBoard();
+  X_Board* board = mEditor.getActiveBoard();
   Q_ASSERT(board);
   if (!board) return PassToParentState;
 
@@ -265,7 +265,7 @@ BES_Base::ProcRetVal BES_AddStrokeText::processSceneEvent(
 
 BES_Base::ProcRetVal BES_AddStrokeText::processRotateEvent(
     const Angle& angle) noexcept {
-  Board* board = mEditor.getActiveBoard();
+  X_Board* board = mEditor.getActiveBoard();
   Q_ASSERT(board);
   if (!board) return PassToParentState;
 
@@ -279,7 +279,7 @@ BES_Base::ProcRetVal BES_AddStrokeText::processRotateEvent(
 
 BES_Base::ProcRetVal BES_AddStrokeText::processFlipEvent(
     Qt::Orientation orientation) noexcept {
-  Board* board = mEditor.getActiveBoard();
+  X_Board* board = mEditor.getActiveBoard();
   Q_ASSERT(board);
   if (!board) return PassToParentState;
 
@@ -294,7 +294,7 @@ BES_Base::ProcRetVal BES_AddStrokeText::processFlipEvent(
   return ForceStayInState;
 }
 
-bool BES_AddStrokeText::addText(Board& board, const Point& pos) noexcept {
+bool BES_AddStrokeText::addText(X_Board& board, const Point& pos) noexcept {
   Q_ASSERT(mUndoCmdActive == false);
 
   try {
@@ -388,7 +388,7 @@ void BES_AddStrokeText::mirrorCheckBoxToggled(bool checked) noexcept {
 }
 
 void BES_AddStrokeText::makeSelectedLayerVisible() noexcept {
-  Board* board = mEditor.getActiveBoard();
+  X_Board* board = mEditor.getActiveBoard();
   if (board) {
     GraphicsLayer* layer = board->getLayerStack().getLayer(*mCurrentLayerName);
     if (layer && layer->isEnabled()) layer->setVisible(true);

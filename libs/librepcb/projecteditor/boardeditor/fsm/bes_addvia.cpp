@@ -88,7 +88,7 @@ BES_Base::ProcRetVal BES_AddVia::process(BEE_Base* event) noexcept {
 
 bool BES_AddVia::entry(BEE_Base* event) noexcept {
   Q_UNUSED(event);
-  Board* board = mEditor.getActiveBoard();
+  X_Board* board = mEditor.getActiveBoard();
   if (!board) return false;
 
   // clear board selection because selection does not make sense in this state
@@ -245,7 +245,7 @@ BES_Base::ProcRetVal BES_AddVia::processSceneEvent(BEE_Base* event) noexcept {
   QEvent* qevent = BEE_RedirectedQEvent::getQEventFromBEE(event);
   Q_ASSERT(qevent);
   if (!qevent) return PassToParentState;
-  Board* board = mEditor.getActiveBoard();
+  X_Board* board = mEditor.getActiveBoard();
   Q_ASSERT(board);
   if (!board) return PassToParentState;
 
@@ -309,7 +309,7 @@ BES_Base::ProcRetVal BES_AddVia::processSceneEvent(BEE_Base* event) noexcept {
   return PassToParentState;
 }
 
-bool BES_AddVia::addVia(Board& board) noexcept {
+bool BES_AddVia::addVia(X_Board& board) noexcept {
   Q_ASSERT(mUndoCmdActive == false);
   Q_ASSERT(mCurrentViaNetSignal);
 
@@ -342,7 +342,7 @@ bool BES_AddVia::addVia(Board& board) noexcept {
   }
 }
 
-bool BES_AddVia::updateVia(Board& board, const Point& pos) noexcept {
+bool BES_AddVia::updateVia(X_Board& board, const Point& pos) noexcept {
   Q_UNUSED(board);
   Q_ASSERT(mUndoCmdActive == true);
 

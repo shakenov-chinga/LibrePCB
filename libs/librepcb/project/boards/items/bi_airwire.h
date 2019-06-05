@@ -48,7 +48,7 @@ public:
   // Constructors / Destructor
   BI_AirWire()                        = delete;
   BI_AirWire(const BI_AirWire& other) = delete;
-  BI_AirWire(Board& board, const NetSignal& netsignal, const Point& p1,
+  BI_AirWire(X_Board& board, const NetSignal& netsignal, const Point& p1,
              const Point& p2);
   ~BI_AirWire() noexcept;
 

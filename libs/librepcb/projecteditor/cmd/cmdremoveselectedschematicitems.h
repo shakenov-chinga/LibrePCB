@@ -34,7 +34,7 @@
 namespace librepcb {
 namespace project {
 
-class Schematic;
+class X_Schematic;
 class SI_NetSegment;
 class SI_NetPoint;
 class SI_NetLine;
@@ -66,7 +66,7 @@ private:
 
 public:
   // Constructors / Destructor
-  explicit CmdRemoveSelectedSchematicItems(Schematic& schematic) noexcept;
+  explicit CmdRemoveSelectedSchematicItems(X_Schematic& schematic) noexcept;
   ~CmdRemoveSelectedSchematicItems() noexcept;
 
 private:
@@ -97,7 +97,7 @@ private:
       noexcept;
 
   // Attributes from the constructor
-  Schematic& mSchematic;
+  X_Schematic& mSchematic;
 };
 
 /*******************************************************************************

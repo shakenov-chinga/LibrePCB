@@ -36,7 +36,7 @@ class DomElement;
 
 namespace project {
 
-class Schematic;
+class X_Schematic;
 
 namespace editor {
 

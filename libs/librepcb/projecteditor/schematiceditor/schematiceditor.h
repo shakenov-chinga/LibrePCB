@@ -33,6 +33,7 @@
  ******************************************************************************/
 namespace librepcb {
 
+class GraphicsScene;
 class GraphicsView;
 class GridProperties;
 class UndoStackActionGroup;
@@ -66,6 +67,30 @@ class SchematicEditor final : public QMainWindow,
   Q_OBJECT
 
 public:
+  /*>>> from schematic.h <<<*/
+  // Types
+
+  /**
+   * @brief Z Values of all items in a schematic scene (to define the stacking
+   * order)
+   *
+   * These values are used for QGraphicsItem::setZValue() to define the stacking
+   * order of all items in a schematic QGraphicsScene. We use integer values,
+   * even if the z-value of QGraphicsItem is a qreal attribute...
+   *
+   * Low number = background, high number = foreground
+   */
+  enum ItemZValue {
+    ZValue_Default = 0,  ///< this is the default value (behind all other items)
+    ZValue_Symbols,      ///< Z value for #project#SI_Symbol items
+    ZValue_NetLabels,    ///< Z value for #project#SI_NetLabel items
+    ZValue_NetLines,     ///< Z value for #project#SI_NetLine items
+    ZValue_HiddenNetPoints,   ///< Z value for hidden #project#SI_NetPoint items
+    ZValue_VisibleNetPoints,  ///< Z value for visible #project#SI_NetPoint
+                              ///< items
+  };
+  /*><*/
+
   // Constructors / Destructor
   explicit SchematicEditor(ProjectEditor& projectEditor, Project& project);
   ~SchematicEditor();
@@ -79,11 +104,36 @@ public:
     return *mGridProperties;
   }
 
+  /*>>> from schematic.h <<<*/
+  GraphicsScene&  getGraphicsScene() const noexcept { return *mGraphicsScene; }
+  bool            isEmpty() const noexcept;
+  QList<SI_Base*> getItemsAtScenePos(const Point& pos) const noexcept;
+  QList<SI_NetPoint*>  getNetPointsAtScenePos(const Point& pos) const noexcept;
+  QList<SI_NetLine*>   getNetLinesAtScenePos(const Point& pos) const noexcept;
+  QList<SI_NetLabel*>  getNetLabelsAtScenePos(const Point& pos) const noexcept;
+  QList<SI_SymbolPin*> getPinsAtScenePos(const Point& pos) const noexcept;
+
+  const QIcon&       getIcon() const noexcept { return mIcon; }
+  /*><*/
+
   // Setters
   bool setActiveSchematicIndex(int index) noexcept;
 
   // General Methods
   void abortAllCommands() noexcept;
+
+  /*>>> from schematic.h <<<*/
+  void showInView(GraphicsView& view) noexcept;
+  void saveViewSceneRect(const QRectF& rect) noexcept { mViewRect = rect; }
+  const QRectF& restoreViewSceneRect() const noexcept { return mViewRect; }
+  void          setSelectionRect(const Point& p1, const Point& p2,
+                                 bool updateItems) noexcept;
+  void          clearSelection() const noexcept;
+  void          updateAllNetLabelAnchors() noexcept;
+  void          renderToQPainter(QPainter& painter) const noexcept;
+  std::unique_ptr<SchematicSelectionQuery> createSelectionQuery() const
+      noexcept;
+  /*><*/
 
 protected:
   void closeEvent(QCloseEvent* event);
@@ -118,6 +168,7 @@ private:
   // Private Methods
   bool graphicsViewEventHandler(QEvent* event);
   void toolActionGroupChangeTriggered(const QVariant& newTool) noexcept;
+  void updateIcon() noexcept;
 
   // General Attributes
   ProjectEditor&                       mProjectEditor;
@@ -127,6 +178,12 @@ private:
   GridProperties*                      mGridProperties;
   QScopedPointer<UndoStackActionGroup> mUndoStackActionGroup;
   QScopedPointer<ExclusiveActionGroup> mToolsActionGroup;
+
+  /*>>> from schematic.h <<<*/
+  QScopedPointer<GraphicsScene>  mGraphicsScene;
+  QRectF                         mViewRect;
+  QIcon       mIcon;
+  /*><*/
 
   int mActiveSchematicIndex;
 

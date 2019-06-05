@@ -39,7 +39,7 @@ class CmdStrokeTextEdit;
 
 namespace project {
 
-class Board;
+class X_Board;
 
 namespace editor {
 
@@ -70,7 +70,7 @@ private:
   ProcRetVal processSceneEvent(BEE_Base* event) noexcept;
   ProcRetVal processRotateEvent(const Angle& angle) noexcept;
   ProcRetVal processFlipEvent(Qt::Orientation orientation) noexcept;
-  bool       addText(Board& board, const Point& pos) noexcept;
+  bool       addText(X_Board& board, const Point& pos) noexcept;
   void       updateTextPosition(const Point& pos) noexcept;
   bool       fixText(const Point& pos) noexcept;
   void       layerComboBoxLayerChanged(const QString& layerName) noexcept;

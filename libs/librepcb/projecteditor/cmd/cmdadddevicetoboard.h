@@ -44,7 +44,7 @@ class Device;
 
 namespace project {
 
-class Board;
+class X_Board;
 class ComponentInstance;
 class BI_Device;
 
@@ -60,7 +60,7 @@ namespace editor {
 class CmdAddDeviceToBoard final : public UndoCommandGroup {
 public:
   // Constructors / Destructor
-  CmdAddDeviceToBoard(workspace::Workspace& workspace, Board& board,
+  CmdAddDeviceToBoard(workspace::Workspace& workspace, X_Board& board,
                       ComponentInstance& cmpInstance, const Uuid& deviceUuid,
                       const tl::optional<Uuid>& footprintUuid,
                       const Point&              position = Point(),
@@ -81,7 +81,7 @@ private:
 
   // Attributes from the constructor
   workspace::Workspace& mWorkspace;
-  Board&                mBoard;
+  X_Board&                mBoard;
   ComponentInstance&    mComponentInstance;
   Uuid                  mDeviceUuid;
   tl::optional<Uuid>    mFootprintUuid;

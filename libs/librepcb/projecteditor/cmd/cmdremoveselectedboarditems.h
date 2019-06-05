@@ -33,7 +33,7 @@
 namespace librepcb {
 namespace project {
 
-class Board;
+class X_Board;
 class BI_Via;
 class BI_NetPoint;
 class BI_NetLine;
@@ -53,7 +53,7 @@ class CmdRemoveBoardItems;
 class CmdRemoveSelectedBoardItems final : public UndoCommand {
 public:
   // Constructors / Destructor
-  explicit CmdRemoveSelectedBoardItems(Board& board) noexcept;
+  explicit CmdRemoveSelectedBoardItems(X_Board& board) noexcept;
   ~CmdRemoveSelectedBoardItems() noexcept;
 
 private:  // Methods
@@ -67,7 +67,7 @@ private:  // Methods
   void performRedo() override;
 
 private:  // Data
-  Board&                              mBoard;
+  X_Board&                              mBoard;
   QScopedPointer<CmdRemoveBoardItems> mWrappedCommand;
 };
 

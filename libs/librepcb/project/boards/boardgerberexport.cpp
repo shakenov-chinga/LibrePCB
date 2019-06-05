@@ -61,7 +61,7 @@ namespace project {
  ******************************************************************************/
 
 BoardGerberExport::BoardGerberExport(
-    const Board& board, const BoardFabricationOutputSettings& settings) noexcept
+    const X_Board& board, const BoardFabricationOutputSettings& settings) noexcept
   : mProject(board.getProject()),
     mBoard(board),
     mSettings(new BoardFabricationOutputSettings(settings)),

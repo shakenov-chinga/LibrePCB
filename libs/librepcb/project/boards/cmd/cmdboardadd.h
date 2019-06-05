@@ -35,7 +35,7 @@ namespace librepcb {
 namespace project {
 
 class Project;
-class Board;
+class X_Board;
 
 /*******************************************************************************
  *  Class CmdBoardAdd
@@ -48,12 +48,12 @@ class CmdBoardAdd final : public UndoCommand {
 public:
   // Constructors / Destructor
   CmdBoardAdd(Project& project, const ElementName& name) noexcept;
-  CmdBoardAdd(Project& project, const Board& boardToCopy,
+  CmdBoardAdd(Project& project, const X_Board& boardToCopy,
               const ElementName& name) noexcept;
   ~CmdBoardAdd() noexcept;
 
   // Getters
-  Board* getBoard() const noexcept { return mBoard; }
+  X_Board* getBoard() const noexcept { return mBoard; }
 
 private:
   // Private Methods
@@ -70,9 +70,9 @@ private:
   // Private Member Variables
 
   Project&     mProject;
-  const Board* mBoardToCopy;
+  const X_Board* mBoardToCopy;
   ElementName  mName;
-  Board*       mBoard;
+  X_Board*       mBoard;
   int          mPageIndex;
 };
 

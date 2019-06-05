@@ -39,7 +39,7 @@ namespace project {
 
 class Project;
 class Circuit;
-class Schematic;
+class X_Schematic;
 class SGI_Base;
 
 /*******************************************************************************
@@ -66,13 +66,13 @@ public:
   // Constructors / Destructor
   SI_Base()                     = delete;
   SI_Base(const SI_Base& other) = delete;
-  SI_Base(Schematic& schematic) noexcept;
+  SI_Base(X_Schematic& schematic) noexcept;
   virtual ~SI_Base() noexcept;
 
   // Getters
   Project&             getProject() const noexcept;
   Circuit&             getCircuit() const noexcept;
-  Schematic&           getSchematic() const noexcept { return mSchematic; }
+  X_Schematic&           getSchematic() const noexcept { return mSchematic; }
   virtual Type_t       getType() const noexcept            = 0;
   virtual const Point& getPosition() const noexcept        = 0;
   virtual QPainterPath getGrabAreaScenePx() const noexcept = 0;
@@ -97,7 +97,7 @@ protected:
   void removeFromSchematic(SGI_Base* item) noexcept;
 
 protected:
-  Schematic& mSchematic;
+  X_Schematic& mSchematic;
 
 private:
   // General Attributes

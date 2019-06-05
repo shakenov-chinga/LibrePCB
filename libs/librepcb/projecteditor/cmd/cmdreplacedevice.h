@@ -39,7 +39,7 @@ class Workspace;
 
 namespace project {
 
-class Board;
+class X_Board;
 class BI_Device;
 
 namespace editor {
@@ -54,7 +54,7 @@ namespace editor {
 class CmdReplaceDevice final : public UndoCommandGroup {
 public:
   // Constructors / Destructor
-  CmdReplaceDevice(workspace::Workspace& workspace, Board& board,
+  CmdReplaceDevice(workspace::Workspace& workspace, X_Board& board,
                    BI_Device& device, const Uuid& newDeviceUuid,
                    const tl::optional<Uuid>& newFootprintUuid) noexcept;
   ~CmdReplaceDevice() noexcept;
@@ -69,7 +69,7 @@ private:
 
   // Attributes from the constructor
   workspace::Workspace& mWorkspace;
-  Board&                mBoard;
+  X_Board&                mBoard;
   BI_Device&            mDeviceInstance;
   Uuid                  mNewDeviceUuid;
   tl::optional<Uuid>    mNewFootprintUuid;

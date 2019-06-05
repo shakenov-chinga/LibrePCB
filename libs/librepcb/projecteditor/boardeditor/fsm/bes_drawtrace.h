@@ -96,21 +96,21 @@ private:
   ProcRetVal       processSubStatePositioning(BEE_Base* event) noexcept;
   ProcRetVal       processIdleSceneEvent(BEE_Base* event) noexcept;
   ProcRetVal       processPositioningSceneEvent(BEE_Base* event) noexcept;
-  bool             startPositioning(Board& board, const Point& pos,
+  bool             startPositioning(X_Board& board, const Point& pos,
                                     BI_NetPoint* fixedPoint = nullptr) noexcept;
-  bool             addNextNetPoint(Board& board, const Point& pos) noexcept;
+  bool             addNextNetPoint(X_Board& board, const Point& pos) noexcept;
   bool             abortPositioning(bool showErrMsgBox) noexcept;
-  BI_Via*          findVia(Board& board, const Point& pos,
+  BI_Via*          findVia(X_Board& board, const Point& pos,
                            NetSignal* netsignal = nullptr) const noexcept;
-  BI_FootprintPad* findPad(Board& board, const Point& pos,
+  BI_FootprintPad* findPad(X_Board& board, const Point& pos,
                            GraphicsLayer* layer     = nullptr,
                            NetSignal*     netsignal = nullptr) const noexcept;
-  BI_NetPoint*     findNetPoint(Board& board, const Point& pos,
+  BI_NetPoint*     findNetPoint(X_Board& board, const Point& pos,
                                 GraphicsLayer*            layer     = nullptr,
                                 NetSignal*                netsignal = nullptr,
                                 const QSet<BI_NetPoint*>& except    = {}) const
       noexcept;
-  BI_NetLine* findNetLine(Board& board, const Point& pos,
+  BI_NetLine* findNetLine(X_Board& board, const Point& pos,
                           GraphicsLayer*           layer     = nullptr,
                           NetSignal*               netsignal = nullptr,
                           const QSet<BI_NetLine*>& except = {}) const noexcept;

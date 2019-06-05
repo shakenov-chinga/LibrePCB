@@ -78,7 +78,7 @@ void BI_Via::init() {
   mGraphicsItem->setPos(mPosition.toPxQPointF());
 
   // connect to the "attributes changed" signal of the board
-  connect(&mBoard, &Board::attributesChanged, this,
+  connect(&mBoard, &X_Board::attributesChanged, this,
           &BI_Via::boardAttributesChanged);
 }
 

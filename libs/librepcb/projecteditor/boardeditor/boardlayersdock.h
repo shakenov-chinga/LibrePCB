@@ -36,7 +36,7 @@ class GraphicsLayer;
 namespace project {
 
 class Project;
-class Board;
+class X_Board;
 class ComponentInstance;
 
 namespace editor {
@@ -63,7 +63,7 @@ public:
   ~BoardLayersDock() noexcept;
 
   // Setters
-  void setActiveBoard(Board* board);
+  void setActiveBoard(X_Board* board);
 
 private slots:
 
@@ -91,7 +91,7 @@ private:
   // General
   QScopedPointer<Ui::BoardLayersDock> mUi;
   BoardEditor&                        mBoardEditor;
-  Board*                              mActiveBoard;
+  X_Board*                              mActiveBoard;
   QMetaObject::Connection             mActiveBoardConnection;
 };
 

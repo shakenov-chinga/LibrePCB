@@ -37,7 +37,7 @@ namespace librepcb {
 namespace project {
 
 class Circuit;
-class Schematic;
+class X_Schematic;
 class NetSignal;
 class SI_NetSegment;
 

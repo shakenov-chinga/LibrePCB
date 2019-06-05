@@ -50,7 +50,7 @@ QVector<QLineF> SGI_NetLabel::sOriginCrossLines;
 
 SGI_NetLabel::SGI_NetLabel(SI_NetLabel& netlabel) noexcept
   : SGI_Base(), mNetLabel(netlabel) {
-  setZValue(Schematic::ZValue_NetLabels);
+  setZValue(X_Schematic::ZValue_NetLabels);
 
   mStaticText.setTextFormat(Qt::PlainText);
   mStaticText.setPerformanceHint(QStaticText::AggressiveCaching);

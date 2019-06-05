@@ -50,7 +50,7 @@ namespace editor {
  ******************************************************************************/
 
 CmdAddSymbolToSchematic::CmdAddSymbolToSchematic(
-    workspace::Workspace& workspace, Schematic& schematic,
+    workspace::Workspace& workspace, X_Schematic& schematic,
     ComponentInstance& cmpInstance, const Uuid& symbolItem,
     const Point& position, const Angle& angle) noexcept
   : UndoCommandGroup(tr("Add symbol")),

@@ -34,7 +34,7 @@
 namespace librepcb {
 namespace project {
 
-class Schematic;
+class X_Schematic;
 class CmdSymbolInstanceEdit;
 class CmdSchematicNetPointEdit;
 class CmdSchematicNetLabelEdit;
@@ -51,7 +51,7 @@ namespace editor {
 class CmdMoveSelectedSchematicItems final : public UndoCommandGroup {
 public:
   // Constructors / Destructor
-  CmdMoveSelectedSchematicItems(Schematic&   schematic,
+  CmdMoveSelectedSchematicItems(X_Schematic&   schematic,
                                 const Point& startPos) noexcept;
   ~CmdMoveSelectedSchematicItems() noexcept;
 
@@ -65,7 +65,7 @@ private:
   bool performExecute() override;
 
   // Private Member Variables
-  Schematic& mSchematic;
+  X_Schematic& mSchematic;
   Point      mStartPos;
   Point      mDeltaPos;
 

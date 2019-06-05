@@ -141,7 +141,7 @@ BES_Base::ProcRetVal BES_AddDevice::processSceneEvent(
   QEvent* qevent = BEE_RedirectedQEvent::getQEventFromBEE(event);
   Q_ASSERT(qevent);
   if (!qevent) return PassToParentState;
-  Board* board = mEditor.getActiveBoard();
+  X_Board* board = mEditor.getActiveBoard();
   Q_ASSERT(board);
   if (!board) return PassToParentState;
   if (!mIsUndoCmdActive) return PassToParentState;  // temporary
@@ -232,7 +232,7 @@ BES_Base::ProcRetVal BES_AddDevice::processSceneEvent(
 
 void BES_AddDevice::startAddingDevice(ComponentInstance& cmp, const Uuid& dev,
                                       const Uuid& fpt) {
-  Board* board = mEditor.getActiveBoard();
+  X_Board* board = mEditor.getActiveBoard();
   Q_ASSERT(board);
   if (!board) throw LogicError(__FILE__, __LINE__);
 

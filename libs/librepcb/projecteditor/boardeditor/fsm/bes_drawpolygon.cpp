@@ -200,7 +200,7 @@ BES_Base::ProcRetVal BES_DrawPolygon::processIdleSceneEvent(
   QEvent* qevent = BEE_RedirectedQEvent::getQEventFromBEE(event);
   Q_ASSERT(qevent);
   if (!qevent) return PassToParentState;
-  Board* board = mEditor.getActiveBoard();
+  X_Board* board = mEditor.getActiveBoard();
   Q_ASSERT(board);
   if (!board) return PassToParentState;
 
@@ -244,7 +244,7 @@ BES_Base::ProcRetVal BES_DrawPolygon::processPositioningSceneEvent(
   QEvent* qevent = BEE_RedirectedQEvent::getQEventFromBEE(event);
   Q_ASSERT(qevent);
   if (!qevent) return PassToParentState;
-  Board* board = mEditor.getActiveBoard();
+  X_Board* board = mEditor.getActiveBoard();
   Q_ASSERT(board);
   if (!board) return PassToParentState;
 
@@ -284,7 +284,7 @@ BES_Base::ProcRetVal BES_DrawPolygon::processPositioningSceneEvent(
   return PassToParentState;
 }
 
-bool BES_DrawPolygon::start(Board& board, const Point& pos) noexcept {
+bool BES_DrawPolygon::start(X_Board& board, const Point& pos) noexcept {
   try {
     // start a new undo command
     Q_ASSERT(mSubState == SubState::Idle);
@@ -310,7 +310,7 @@ bool BES_DrawPolygon::start(Board& board, const Point& pos) noexcept {
   }
 }
 
-bool BES_DrawPolygon::addSegment(Board& board, const Point& pos) noexcept {
+bool BES_DrawPolygon::addSegment(X_Board& board, const Point& pos) noexcept {
   Q_UNUSED(board);
   Q_ASSERT(mSubState == SubState::Positioning);
 
@@ -400,7 +400,7 @@ void BES_DrawPolygon::filledCheckBoxCheckedChanged(bool checked) noexcept {
 
 void BES_DrawPolygon::makeSelectedLayerVisible() noexcept {
   if (mCurrentPolygon) {
-    Board&         board = mCurrentPolygon->getBoard();
+    X_Board&         board = mCurrentPolygon->getBoard();
     GraphicsLayer* layer = board.getLayerStack().getLayer(*mCurrentLayerName);
     if (layer && layer->isEnabled()) layer->setVisible(true);
   }

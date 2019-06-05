@@ -42,7 +42,7 @@ namespace project {
  *  Constructors / Destructor
  ******************************************************************************/
 
-BI_Plane::BI_Plane(Board& board, const BI_Plane& other)
+BI_Plane::BI_Plane(X_Board& board, const BI_Plane& other)
   : BI_Base(board),
     mUuid(Uuid::createRandom()),
     mLayerName(other.mLayerName),
@@ -61,7 +61,7 @@ BI_Plane::BI_Plane(Board& board, const BI_Plane& other)
   init();
 }
 
-BI_Plane::BI_Plane(Board& board, const SExpression& node)
+BI_Plane::BI_Plane(X_Board& board, const SExpression& node)
   : BI_Base(board),
     mUuid(node.getChildByIndex(0).getValue<Uuid>()),
     mLayerName(node.getValueByPath<QString>("layer", true)),
@@ -87,7 +87,7 @@ BI_Plane::BI_Plane(Board& board, const SExpression& node)
   init();
 }
 
-BI_Plane::BI_Plane(Board& board, const Uuid& uuid,
+BI_Plane::BI_Plane(X_Board& board, const Uuid& uuid,
                    const GraphicsLayerName& layerName, NetSignal& netsignal,
                    const Path& outline)
   : BI_Base(board),
@@ -111,7 +111,7 @@ void BI_Plane::init() {
   mGraphicsItem->setRotation(Angle::deg0().toDeg());
 
   // connect to the "attributes changed" signal of the board
-  connect(&mBoard, &Board::attributesChanged, this,
+  connect(&mBoard, &X_Board::attributesChanged, this,
           &BI_Plane::boardAttributesChanged);
 }
 

@@ -43,7 +43,7 @@ class ComponentSymbolVariantItem;
 
 namespace project {
 
-class Schematic;
+class X_Schematic;
 class ComponentInstance;
 class SI_SymbolPin;
 
@@ -63,8 +63,8 @@ public:
   // Constructors / Destructor
   SI_Symbol()                       = delete;
   SI_Symbol(const SI_Symbol& other) = delete;
-  explicit SI_Symbol(Schematic& schematic, const SExpression& node);
-  explicit SI_Symbol(Schematic& schematic, ComponentInstance& cmpInstance,
+  explicit SI_Symbol(X_Schematic& schematic, const SExpression& node);
+  explicit SI_Symbol(X_Schematic& schematic, ComponentInstance& cmpInstance,
                      const Uuid& symbolItem, const Point& position = Point(),
                      const Angle& rotation = Angle(), bool mirrored = false);
   ~SI_Symbol() noexcept;

@@ -33,7 +33,7 @@
 namespace librepcb {
 namespace project {
 
-class Schematic;
+class X_Schematic;
 class SI_NetSegment;
 
 /*******************************************************************************
@@ -63,7 +63,7 @@ private:
 
   // Private Member Variables
 
-  Schematic&     mSchematic;
+  X_Schematic&     mSchematic;
   SI_NetSegment& mNetSegment;
 };
 

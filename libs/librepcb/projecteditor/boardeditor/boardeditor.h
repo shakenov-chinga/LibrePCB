@@ -78,11 +78,45 @@ public:
   Project&       getProject() const noexcept { return mProject; }
   Board*         getActiveBoard() const noexcept { return mActiveBoard.data(); }
 
+  /*>>> from schematic.h <<<*/
+  GraphicsScene&   getGraphicsScene() const noexcept { return *mGraphicsScene; }
+
+  bool                isEmpty() const noexcept;
+  QList<BI_Base*>     getItemsAtScenePos(const Point& pos) const noexcept;
+  QList<BI_Via*>      getViasAtScenePos(const Point&     pos,
+                                        const NetSignal* netsignal) const noexcept;
+  QList<BI_NetPoint*> getNetPointsAtScenePos(const Point&         pos,
+                                             const GraphicsLayer* layer,
+                                             const NetSignal* netsignal) const
+      noexcept;
+  QList<BI_NetLine*> getNetLinesAtScenePos(const Point&         pos,
+                                           const GraphicsLayer* layer,
+                                           const NetSignal*     netsignal) const
+      noexcept;
+  QList<BI_FootprintPad*> getPadsAtScenePos(const Point&         pos,
+                                            const GraphicsLayer* layer,
+                                            const NetSignal* netsignal) const
+      noexcept;
+  QList<BI_Base*> getAllItems() const noexcept;
+
+  const QIcon&       getIcon() const noexcept { return mIcon; }
+  /*><*/
+
   // Setters
   void setActiveBoardIndex(int index) noexcept;
 
   // General Methods
   void abortAllCommands() noexcept;
+
+  /*>>> from schematic.h <<<*/
+  void showInView(GraphicsView& view) noexcept;
+  void saveViewSceneRect(const QRectF& rect) noexcept { mViewRect = rect; }
+  const QRectF& restoreViewSceneRect() const noexcept { return mViewRect; }
+  void          setSelectionRect(const Point& p1, const Point& p2,
+                                 bool updateItems) noexcept;
+  void          clearSelection() const noexcept;
+  std::unique_ptr<BoardSelectionQuery> createSelectionQuery() const noexcept;
+  /*><*/
 
 protected:
   void closeEvent(QCloseEvent* event);
@@ -129,6 +163,12 @@ private:
   GraphicsView*                        mGraphicsView;
   QScopedPointer<UndoStackActionGroup> mUndoStackActionGroup;
   QScopedPointer<ExclusiveActionGroup> mToolsActionGroup;
+
+  /*>>> from schematic.h <<<*/
+  QScopedPointer<GraphicsScene>                  mGraphicsScene;
+  QRectF                                         mViewRect;
+  QIcon       mIcon;
+  /*><*/
 
   // Misc
   QPointer<Board> mActiveBoard;

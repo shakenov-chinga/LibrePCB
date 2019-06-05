@@ -51,7 +51,7 @@ namespace editor {
  ******************************************************************************/
 
 CmdAddDeviceToBoard::CmdAddDeviceToBoard(
-    workspace::Workspace& workspace, Board& board,
+    workspace::Workspace& workspace, X_Board& board,
     ComponentInstance& cmpInstance, const Uuid& deviceUuid,
     const tl::optional<Uuid>& footprintUuid, const Point& position,
     const Angle& rotation, bool mirror) noexcept

@@ -94,7 +94,7 @@ void SchematicPagesDock::activeSchematicChanged(int oldIndex, int newIndex) {
 }
 
 void SchematicPagesDock::schematicAdded(int newIndex) {
-  Schematic* schematic = mProject.getSchematicByIndex(newIndex);
+  X_Schematic* schematic = mProject.getSchematicByIndex(newIndex);
   Q_ASSERT(schematic);
   if (!schematic) return;
 
@@ -130,7 +130,7 @@ void SchematicPagesDock::on_btnNewSchematic_clicked() {
 }
 
 void SchematicPagesDock::on_btnRemoveSchematic_clicked() {
-  Schematic* schematic =
+  X_Schematic* schematic =
       mProject.getSchematicByIndex(mUi->listWidget->currentRow());
   if (!schematic) return;
 

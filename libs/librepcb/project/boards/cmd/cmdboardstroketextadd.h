@@ -33,7 +33,7 @@
 namespace librepcb {
 namespace project {
 
-class Board;
+class X_Board;
 class BI_StrokeText;
 
 /*******************************************************************************
@@ -65,7 +65,7 @@ private:
   void performRedo() override;
 
   // Private Member Variables
-  Board&         mBoard;
+  X_Board&         mBoard;
   BI_StrokeText* mStrokeText;
 };
 

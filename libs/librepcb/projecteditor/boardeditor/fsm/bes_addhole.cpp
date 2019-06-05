@@ -73,7 +73,7 @@ BES_Base::ProcRetVal BES_AddHole::process(BEE_Base* event) noexcept {
 
 bool BES_AddHole::entry(BEE_Base* event) noexcept {
   Q_UNUSED(event);
-  Board* board = mEditor.getActiveBoard();
+  X_Board* board = mEditor.getActiveBoard();
   if (!board) return false;
 
   // clear board selection because selection does not make sense in this state
@@ -140,7 +140,7 @@ BES_Base::ProcRetVal BES_AddHole::processSceneEvent(BEE_Base* event) noexcept {
   QEvent* qevent = BEE_RedirectedQEvent::getQEventFromBEE(event);
   Q_ASSERT(qevent);
   if (!qevent) return PassToParentState;
-  Board* board = mEditor.getActiveBoard();
+  X_Board* board = mEditor.getActiveBoard();
   Q_ASSERT(board);
   if (!board) return PassToParentState;
 
@@ -184,7 +184,7 @@ BES_Base::ProcRetVal BES_AddHole::processSceneEvent(BEE_Base* event) noexcept {
   return PassToParentState;
 }
 
-bool BES_AddHole::addHole(Board& board, const Point& pos) noexcept {
+bool BES_AddHole::addHole(X_Board& board, const Point& pos) noexcept {
   Q_ASSERT(mUndoCmdActive == false);
 
   try {
@@ -248,7 +248,7 @@ void BES_AddHole::diameterSpinBoxValueChanged(double value) noexcept {
 }
 
 void BES_AddHole::makeLayerVisible() noexcept {
-  Board* board = mEditor.getActiveBoard();
+  X_Board* board = mEditor.getActiveBoard();
   if (board) {
     GraphicsLayer* layer =
         board->getLayerStack().getLayer(GraphicsLayer::sBoardDrillsNpth);

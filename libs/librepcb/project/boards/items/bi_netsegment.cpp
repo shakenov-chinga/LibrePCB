@@ -48,7 +48,7 @@ namespace project {
  *  Constructors / Destructor
  ******************************************************************************/
 
-BI_NetSegment::BI_NetSegment(Board& board, const BI_NetSegment& other,
+BI_NetSegment::BI_NetSegment(X_Board& board, const BI_NetSegment& other,
                              const QHash<const BI_Device*, BI_Device*>& devMap)
   : BI_Base(board),
     mUuid(Uuid::createRandom()),
@@ -87,7 +87,7 @@ BI_NetSegment::BI_NetSegment(Board& board, const BI_NetSegment& other,
   }
 }
 
-BI_NetSegment::BI_NetSegment(Board& board, const SExpression& node)
+BI_NetSegment::BI_NetSegment(X_Board& board, const SExpression& node)
   : BI_Base(board),
     mUuid(node.getChildByIndex(0).getValue<Uuid>()),
     mNetSignal(nullptr) {
@@ -158,7 +158,7 @@ BI_NetSegment::BI_NetSegment(Board& board, const SExpression& node)
   }
 }
 
-BI_NetSegment::BI_NetSegment(Board& board, NetSignal& signal)
+BI_NetSegment::BI_NetSegment(X_Board& board, NetSignal& signal)
   : BI_Base(board), mUuid(Uuid::createRandom()), mNetSignal(&signal) {
 }
 

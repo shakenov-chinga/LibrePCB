@@ -204,7 +204,7 @@ SES_Base::ProcRetVal SES_DrawWire::processIdleSceneEvent(
   QEvent* qevent = SEE_RedirectedQEvent::getQEventFromSEE(event);
   Q_ASSERT(qevent);
   if (!qevent) return PassToParentState;
-  Schematic* schematic = mEditor.getActiveSchematic();
+  X_Schematic* schematic = mEditor.getActiveSchematic();
   Q_ASSERT(schematic);
   if (!schematic) return PassToParentState;
 
@@ -250,7 +250,7 @@ SES_Base::ProcRetVal SES_DrawWire::processPositioningSceneEvent(
   QEvent* qevent = SEE_RedirectedQEvent::getQEventFromSEE(event);
   Q_ASSERT(qevent);
   if (!qevent) return PassToParentState;
-  Schematic* schematic = mEditor.getActiveSchematic();
+  X_Schematic* schematic = mEditor.getActiveSchematic();
   Q_ASSERT(schematic);
   if (!schematic) return PassToParentState;
 
@@ -315,7 +315,7 @@ SES_Base::ProcRetVal SES_DrawWire::processPositioningSceneEvent(
   return PassToParentState;
 }
 
-bool SES_DrawWire::startPositioning(Schematic& schematic, const Point& pos,
+bool SES_DrawWire::startPositioning(X_Schematic& schematic, const Point& pos,
                                     SI_NetPoint* fixedPoint) noexcept {
   try {
     // start a new undo command
@@ -448,7 +448,7 @@ bool SES_DrawWire::startPositioning(Schematic& schematic, const Point& pos,
   }
 }
 
-bool SES_DrawWire::addNextNetPoint(Schematic&   schematic,
+bool SES_DrawWire::addNextNetPoint(X_Schematic&   schematic,
                                    const Point& pos) noexcept {
   Q_ASSERT(mSubState == SubState_PositioningNetPoint);
 
@@ -652,7 +652,7 @@ bool SES_DrawWire::abortPositioning(bool showErrMsgBox) noexcept {
   }
 }
 
-SI_SymbolPin* SES_DrawWire::findSymbolPin(Schematic&   schematic,
+SI_SymbolPin* SES_DrawWire::findSymbolPin(X_Schematic&   schematic,
                                           const Point& pos) const noexcept {
   QList<SI_SymbolPin*> items = schematic.getPinsAtScenePos(pos);
   for (int i = items.count() - 1; i >= 0; --i) {
@@ -664,14 +664,14 @@ SI_SymbolPin* SES_DrawWire::findSymbolPin(Schematic&   schematic,
   return (items.count() > 0) ? items.first() : nullptr;
 }
 
-SI_NetPoint* SES_DrawWire::findNetPoint(Schematic& schematic, const Point& pos,
+SI_NetPoint* SES_DrawWire::findNetPoint(X_Schematic& schematic, const Point& pos,
                                         SI_NetPoint* except) const noexcept {
   QList<SI_NetPoint*> items = schematic.getNetPointsAtScenePos(pos);
   items.removeAll(except);
   return (items.count() > 0) ? items.first() : nullptr;
 }
 
-SI_NetLine* SES_DrawWire::findNetLine(Schematic& schematic, const Point& pos,
+SI_NetLine* SES_DrawWire::findNetLine(X_Schematic& schematic, const Point& pos,
                                       SI_NetLine* except) const noexcept {
   QList<SI_NetLine*> items = schematic.getNetLinesAtScenePos(pos);
   items.removeAll(except);

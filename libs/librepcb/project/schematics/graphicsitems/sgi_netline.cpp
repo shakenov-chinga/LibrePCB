@@ -47,7 +47,7 @@ namespace project {
 
 SGI_NetLine::SGI_NetLine(SI_NetLine& netline) noexcept
   : SGI_Base(), mNetLine(netline), mLayer(nullptr) {
-  setZValue(Schematic::ZValue_NetLines);
+  setZValue(X_Schematic::ZValue_NetLines);
 
   mLayer = getLayer(GraphicsLayer::sSchematicNetLines);
   Q_ASSERT(mLayer);

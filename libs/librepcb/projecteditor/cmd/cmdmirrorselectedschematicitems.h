@@ -34,7 +34,7 @@
 namespace librepcb {
 namespace project {
 
-class Schematic;
+class X_Schematic;
 
 namespace editor {
 
@@ -48,7 +48,7 @@ namespace editor {
 class CmdMirrorSelectedSchematicItems final : public UndoCommandGroup {
 public:
   // Constructors / Destructor
-  CmdMirrorSelectedSchematicItems(Schematic&      schematic,
+  CmdMirrorSelectedSchematicItems(X_Schematic&      schematic,
                                   Qt::Orientation orientation) noexcept;
   ~CmdMirrorSelectedSchematicItems() noexcept;
 
@@ -61,7 +61,7 @@ private:
   // Private Member Variables
 
   // Attributes from the constructor
-  Schematic&      mSchematic;
+  X_Schematic&      mSchematic;
   Qt::Orientation mOrientation;
 };
 

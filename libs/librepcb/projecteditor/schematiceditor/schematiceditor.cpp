@@ -243,6 +243,84 @@ Schematic* SchematicEditor::getActiveSchematic() const noexcept {
   return mProject.getSchematicByIndex(mActiveSchematicIndex);
 }
 
+/*>>> from schematic.h <<<*/
+QList<SI_Base*> Schematic::getItemsAtScenePos(const Point& pos) const noexcept {
+  QPointF scenePosPx = pos.toPxQPointF();
+  QList<SI_Base*>
+      list;  // Note: The order of adding the items is very important (the
+             // top most item must appear as the first item in the list)!
+
+  // visible netpoints
+  const QList<SI_NetPoint*> netpoints(getNetPointsAtScenePos(pos));
+  foreach (SI_NetPoint* netpoint, netpoints) {
+    if (netpoint->isVisibleJunction()) {
+      list.append(netpoint);
+    }
+  }
+  // hidden netpoints
+  foreach (SI_NetPoint* netpoint, netpoints) {
+    if (!netpoint->isVisibleJunction()) {
+      list.append(netpoint);
+    }
+  }
+  // netlines
+  foreach (SI_NetLine* netline, getNetLinesAtScenePos(pos)) {
+    list.append(netline);
+  }
+  // netlabels
+  foreach (SI_NetLabel* netlabel, getNetLabelsAtScenePos(pos)) {
+    list.append(netlabel);
+  }
+  // symbols & pins
+  foreach (SI_Symbol* symbol, mSymbols) {
+    foreach (SI_SymbolPin* pin, symbol->getPins()) {
+      if (pin->getGrabAreaScenePx().contains(scenePosPx)) list.append(pin);
+    }
+    if (symbol->getGrabAreaScenePx().contains(scenePosPx)) list.append(symbol);
+  }
+  return list;
+}
+
+QList<SI_NetPoint*> Schematic::getNetPointsAtScenePos(const Point& pos) const
+    noexcept {
+  QList<SI_NetPoint*> list;
+  foreach (SI_NetSegment* segment, mNetSegments) {
+    segment->getNetPointsAtScenePos(pos, list);
+  }
+  return list;
+}
+
+QList<SI_NetLine*> Schematic::getNetLinesAtScenePos(const Point& pos) const
+    noexcept {
+  QList<SI_NetLine*> list;
+  foreach (SI_NetSegment* segment, mNetSegments) {
+    segment->getNetLinesAtScenePos(pos, list);
+  }
+  return list;
+}
+
+QList<SI_NetLabel*> Schematic::getNetLabelsAtScenePos(const Point& pos) const
+    noexcept {
+  QList<SI_NetLabel*> list;
+  foreach (SI_NetSegment* segment, mNetSegments) {
+    segment->getNetLabelsAtScenePos(pos, list);
+  }
+  return list;
+}
+
+QList<SI_SymbolPin*> Schematic::getPinsAtScenePos(const Point& pos) const
+    noexcept {
+  QList<SI_SymbolPin*> list;
+  foreach (SI_Symbol* symbol, mSymbols) {
+    foreach (SI_SymbolPin* pin, symbol->getPins()) {
+      if (pin->getGrabAreaScenePx().contains(pos.toPxQPointF()))
+        list.append(pin);
+    }
+  }
+  return list;
+}
+/*><*/
+
 /*******************************************************************************
  *  Setters
  ******************************************************************************/
@@ -279,6 +357,7 @@ bool SchematicEditor::setActiveSchematicIndex(int index) noexcept {
   emit activeSchematicChanged(mActiveSchematicIndex, index);
   mActiveSchematicIndex = index;
   return true;
+
 }
 
 /*******************************************************************************
@@ -291,6 +370,54 @@ void SchematicEditor::abortAllCommands() noexcept {
   mFsm->processEvent(new SEE_Base(SEE_Base::AbortCommand), true);
   mFsm->processEvent(new SEE_Base(SEE_Base::AbortCommand), true);
 }
+
+/*>>> from schematic.h <<<*/
+void Schematic::showInView(GraphicsView& view) noexcept {
+  view.setScene(mGraphicsScene.data());
+}
+
+void Schematic::setSelectionRect(const Point& p1, const Point& p2,
+                                 bool updateItems) noexcept {
+  mGraphicsScene->setSelectionRect(p1, p2);
+  if (updateItems) {
+    QRectF rectPx = QRectF(p1.toPxQPointF(), p2.toPxQPointF()).normalized();
+    foreach (SI_Symbol* symbol, mSymbols) {
+      bool selectSymbol = symbol->getGrabAreaScenePx().intersects(rectPx);
+      symbol->setSelected(selectSymbol);
+      foreach (SI_SymbolPin* pin, symbol->getPins()) {
+        bool selectPin = pin->getGrabAreaScenePx().intersects(rectPx);
+        pin->setSelected(selectSymbol || selectPin);
+      }
+    }
+    foreach (SI_NetSegment* segment, mNetSegments) {
+      segment->setSelectionRect(rectPx);
+    }
+  }
+}
+
+void Schematic::clearSelection() const noexcept {
+  foreach (SI_Symbol* symbol, mSymbols) { symbol->setSelected(false); }
+  foreach (SI_NetSegment* segment, mNetSegments) { segment->clearSelection(); }
+}
+
+void Schematic::updateAllNetLabelAnchors() noexcept {
+  foreach (SI_NetSegment* netsegment, mNetSegments) {
+    netsegment->updateAllNetLabelAnchors();
+  }
+}
+
+void Schematic::renderToQPainter(QPainter& painter) const noexcept {
+  mGraphicsScene->render(&painter, QRectF(),
+                         mGraphicsScene->itemsBoundingRect(),
+                         Qt::KeepAspectRatio);
+}
+
+std::unique_ptr<SchematicSelectionQuery> Schematic::createSelectionQuery() const
+    noexcept {
+  return std::unique_ptr<SchematicSelectionQuery>(new SchematicSelectionQuery(
+      mSymbols, mNetSegments, const_cast<Schematic*>(this)));
+}
+/*><*/
 
 /*******************************************************************************
  *  Inherited Methods
@@ -499,6 +626,12 @@ void SchematicEditor::toolActionGroupChangeTriggered(
       break;
   }
 }
+
+/*>>> from schematic.h <<<*/
+void Schematic::updateIcon() noexcept {
+  mIcon = QIcon(mGraphicsScene->toPixmap(QSize(297, 210), Qt::white));
+}
+/*><*/
 
 /*******************************************************************************
  *  End of File

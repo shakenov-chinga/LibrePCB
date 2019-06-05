@@ -77,7 +77,7 @@ SES_Base::ProcRetVal SES_AddNetLabel::process(SEE_Base* event) noexcept {
 
 bool SES_AddNetLabel::entry(SEE_Base* event) noexcept {
   Q_UNUSED(event);
-  Schematic* schematic = mEditor.getActiveSchematic();
+  X_Schematic* schematic = mEditor.getActiveSchematic();
   if (!schematic) return false;
 
   // change the cursor
@@ -114,7 +114,7 @@ SES_Base::ProcRetVal SES_AddNetLabel::processSceneEvent(
   QEvent* qevent = SEE_RedirectedQEvent::getQEventFromSEE(event);
   Q_ASSERT(qevent);
   if (!qevent) return PassToParentState;
-  Schematic* schematic = mEditor.getActiveSchematic();
+  X_Schematic* schematic = mEditor.getActiveSchematic();
   Q_ASSERT(schematic);
   if (!schematic) return PassToParentState;
 
@@ -179,7 +179,7 @@ SES_Base::ProcRetVal SES_AddNetLabel::processSceneEvent(
   return PassToParentState;
 }
 
-bool SES_AddNetLabel::addLabel(Schematic&   schematic,
+bool SES_AddNetLabel::addLabel(X_Schematic&   schematic,
                                const Point& pos) noexcept {
   Q_ASSERT(mUndoCmdActive == false);
 

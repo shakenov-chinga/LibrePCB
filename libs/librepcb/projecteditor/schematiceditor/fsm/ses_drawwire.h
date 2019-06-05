@@ -90,15 +90,15 @@ private:
   ProcRetVal processSubStatePositioning(SEE_Base* event) noexcept;
   ProcRetVal processIdleSceneEvent(SEE_Base* event) noexcept;
   ProcRetVal processPositioningSceneEvent(SEE_Base* event) noexcept;
-  bool       startPositioning(Schematic& schematic, const Point& pos,
+  bool       startPositioning(X_Schematic& schematic, const Point& pos,
                               SI_NetPoint* fixedPoint = nullptr) noexcept;
-  bool       addNextNetPoint(Schematic& schematic, const Point& pos) noexcept;
+  bool       addNextNetPoint(X_Schematic& schematic, const Point& pos) noexcept;
   bool       abortPositioning(bool showErrMsgBox) noexcept;
-  SI_SymbolPin* findSymbolPin(Schematic& schematic, const Point& pos) const
+  SI_SymbolPin* findSymbolPin(X_Schematic& schematic, const Point& pos) const
       noexcept;
-  SI_NetPoint* findNetPoint(Schematic& schematic, const Point& pos,
+  SI_NetPoint* findNetPoint(X_Schematic& schematic, const Point& pos,
                             SI_NetPoint* except = nullptr) const noexcept;
-  SI_NetLine*  findNetLine(Schematic& schematic, const Point& pos,
+  SI_NetLine*  findNetLine(X_Schematic& schematic, const Point& pos,
                            SI_NetLine* except = nullptr) const noexcept;
   void         updateNetpointPositions(const Point& cursorPos) noexcept;
   void         updateWireModeActionsCheckedState() noexcept;

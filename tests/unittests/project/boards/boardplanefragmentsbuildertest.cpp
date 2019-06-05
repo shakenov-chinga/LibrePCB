@@ -69,7 +69,7 @@ TEST(BoardPlaneFragmentsBuilderTest, testFragments) {
                   projectFp.getFilename()));
 
   // force planes rebuild
-  Board* board = project->getBoards().first();
+  X_Board* board = project->getBoards().first();
   board->rebuildAllPlanes();
 
   // determine actual plane fragments

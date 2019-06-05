@@ -46,7 +46,7 @@ namespace project {
  *  Constructors / Destructor
  ******************************************************************************/
 
-BI_Device::BI_Device(Board& board, const BI_Device& other)
+BI_Device::BI_Device(X_Board& board, const BI_Device& other)
   : BI_Base(board),
     mCompInstance(other.mCompInstance),
     mLibDevice(other.mLibDevice),
@@ -61,7 +61,7 @@ BI_Device::BI_Device(Board& board, const BI_Device& other)
   init();
 }
 
-BI_Device::BI_Device(Board& board, const SExpression& node)
+BI_Device::BI_Device(X_Board& board, const SExpression& node)
   : BI_Base(board),
     mCompInstance(nullptr),
     mLibDevice(nullptr),
@@ -97,7 +97,7 @@ BI_Device::BI_Device(Board& board, const SExpression& node)
   init();
 }
 
-BI_Device::BI_Device(Board& board, ComponentInstance& compInstance,
+BI_Device::BI_Device(X_Board& board, ComponentInstance& compInstance,
                      const Uuid& deviceUuid, const Uuid& footprintUuid,
                      const Point& position, const Angle& rotation, bool mirror)
   : BI_Base(board),
@@ -169,7 +169,7 @@ void BI_Device::init() {
   }
 
   // emit the "attributesChanged" signal when the board has emited it
-  connect(&mBoard, &Board::attributesChanged, this,
+  connect(&mBoard, &X_Board::attributesChanged, this,
           &BI_Device::attributesChanged);
 
   if (!checkAttributesValidity()) throw LogicError(__FILE__, __LINE__);

@@ -35,7 +35,7 @@
 namespace librepcb {
 namespace project {
 
-class Board;
+class X_Board;
 class BI_Via;
 class CmdBoardViaEdit;
 
@@ -65,8 +65,8 @@ public:
 private:
   // Private Methods
   ProcRetVal processSceneEvent(BEE_Base* event) noexcept;
-  bool       addVia(Board& board) noexcept;
-  bool       updateVia(Board& board, const Point& pos) noexcept;
+  bool       addVia(X_Board& board) noexcept;
+  bool       updateVia(X_Board& board, const Point& pos) noexcept;
   bool       fixVia(const Point& pos) noexcept;
   void       updateShapeActionsCheckedState() noexcept;
   void       setNetSignal(NetSignal* netsignal) noexcept;

@@ -44,7 +44,7 @@ namespace project {
 BGI_AirWire::BGI_AirWire(BI_AirWire& airwire) noexcept
   : BGI_Base(), mAirWire(airwire), mLayer(nullptr) {
   mLayer = getLayer(GraphicsLayer::sBoardAirWires);
-  setZValue(Board::ZValue_AirWires);
+  setZValue(X_Board::ZValue_AirWires);
   updateCacheAndRepaint();
 }
 

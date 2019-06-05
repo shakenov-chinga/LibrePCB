@@ -41,17 +41,17 @@ namespace project {
  *  Constructors / Destructor
  ******************************************************************************/
 
-BI_Hole::BI_Hole(Board& board, const BI_Hole& other) : BI_Base(board) {
+BI_Hole::BI_Hole(X_Board& board, const BI_Hole& other) : BI_Base(board) {
   mHole.reset(new Hole(Uuid::createRandom(), *other.mHole));
   init();
 }
 
-BI_Hole::BI_Hole(Board& board, const SExpression& node) : BI_Base(board) {
+BI_Hole::BI_Hole(X_Board& board, const SExpression& node) : BI_Base(board) {
   mHole.reset(new Hole(node));
   init();
 }
 
-BI_Hole::BI_Hole(Board& board, const Hole& hole) : BI_Base(board) {
+BI_Hole::BI_Hole(X_Board& board, const Hole& hole) : BI_Base(board) {
   mHole.reset(new Hole(hole));
   init();
 }

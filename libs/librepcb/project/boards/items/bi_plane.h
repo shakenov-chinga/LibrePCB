@@ -40,7 +40,7 @@ namespace project {
 
 class Project;
 class NetSignal;
-class Board;
+class X_Board;
 class BGI_Plane;
 
 /*******************************************************************************
@@ -64,9 +64,9 @@ public:
   // Constructors / Destructor
   BI_Plane()                      = delete;
   BI_Plane(const BI_Plane& other) = delete;
-  BI_Plane(Board& board, const BI_Plane& other);
-  BI_Plane(Board& board, const SExpression& node);
-  BI_Plane(Board& board, const Uuid& uuid, const GraphicsLayerName& layerName,
+  BI_Plane(X_Board& board, const BI_Plane& other);
+  BI_Plane(X_Board& board, const SExpression& node);
+  BI_Plane(X_Board& board, const Uuid& uuid, const GraphicsLayerName& layerName,
            NetSignal& netsignal, const Path& outline);
   ~BI_Plane() noexcept;
 

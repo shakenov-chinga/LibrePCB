@@ -40,7 +40,7 @@ class Device;
 
 namespace project {
 
-class Board;
+class X_Board;
 class ComponentInstance;
 class BI_Device;
 

@@ -99,7 +99,7 @@ Project* NewProjectWizard::createProject() const {
 
   // add schematic
   if (mPageInitialization->getCreateSchematic()) {
-    Schematic* schematic = project->createSchematic(
+    X_Schematic* schematic = project->createSchematic(
         ElementName(mPageInitialization->getSchematicName()));  // can throw
     project->addSchematic(*schematic);
   }

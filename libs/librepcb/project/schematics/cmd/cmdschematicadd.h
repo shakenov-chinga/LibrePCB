@@ -35,7 +35,7 @@ namespace librepcb {
 namespace project {
 
 class Project;
-class Schematic;
+class X_Schematic;
 
 /*******************************************************************************
  *  Class CmdSchematicAdd
@@ -51,7 +51,7 @@ public:
   ~CmdSchematicAdd() noexcept;
 
   // Getters
-  Schematic* getSchematic() const noexcept { return mSchematic; }
+  X_Schematic* getSchematic() const noexcept { return mSchematic; }
 
 private:
   // Private Methods
@@ -69,7 +69,7 @@ private:
 
   Project&    mProject;
   ElementName mName;
-  Schematic*  mSchematic;
+  X_Schematic*  mSchematic;
   int         mPageIndex;
 };
 

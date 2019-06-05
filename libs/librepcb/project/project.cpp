@@ -39,6 +39,9 @@
 #include <librepcb/common/fileio/versionfile.h>
 #include <librepcb/common/font/strokefontpool.h>
 
+#include <librepcb/common/items/x_schematic.h>
+#include <librepcb/common/items/x_board.h>
+
 #include <QPrinter>
 #include <QtCore>
 
@@ -167,7 +170,7 @@ Project::Project(std::unique_ptr<TransactionalDirectory> directory,
             getPath(), node.getValueOfFirstChild<QString>());
         std::unique_ptr<TransactionalDirectory> dir(new TransactionalDirectory(
             *mDirectory, fp.getParentDir().toRelative(getPath())));
-        Schematic* schematic = new Schematic(*this, std::move(dir));
+        X_Schematic* schematic = new X_Schematic(*this, std::move(dir));
         addSchematic(*schematic);
       }
       qDebug() << mSchematics.count() << "schematics successfully loaded!";
@@ -183,7 +186,7 @@ Project::Project(std::unique_ptr<TransactionalDirectory> directory,
             getPath(), node.getValueOfFirstChild<QString>());
         std::unique_ptr<TransactionalDirectory> dir(new TransactionalDirectory(
             *mDirectory, fp.getParentDir().toRelative(getPath())));
-        Board* board = new Board(*this, std::move(dir));
+        X_Board* board = new X_Board(*this, std::move(dir));
         addBoard(*board);
       }
       qDebug() << mBoards.count() << "boards successfully loaded!";
@@ -198,13 +201,13 @@ Project::Project(std::unique_ptr<TransactionalDirectory> directory,
     if (create) save();  // write all files to file system
   } catch (...) {
     // free the allocated memory in the reverse order of their allocation...
-    foreach (Board* board, mBoards) {
+    foreach (X_Board* board, mBoards) {
       try {
         removeBoard(*board, true);
       } catch (...) {
       }
     }
-    foreach (Schematic* schematic, mSchematics) {
+    foreach (X_Schematic* schematic, mSchematics) {
       try {
         removeSchematic(*schematic, true);
       } catch (...) {
@@ -221,7 +224,7 @@ Project::~Project() noexcept {
   // free the allocated memory in the reverse order of their allocation
 
   // delete all boards and schematics (and catch all throwed exceptions)
-  foreach (Board* board, mBoards) {
+  foreach (X_Board* board, mBoards) {
     try {
       removeBoard(*board, true);
     } catch (...) {
@@ -229,7 +232,7 @@ Project::~Project() noexcept {
   }
   qDeleteAll(mRemovedBoards);
   mRemovedBoards.clear();
-  foreach (Schematic* schematic, mSchematics) {
+  foreach (X_Schematic* schematic, mSchematics) {
     try {
       removeSchematic(*schematic, true);
     } catch (...) {
@@ -245,25 +248,25 @@ Project::~Project() noexcept {
  *  Schematic Methods
  ******************************************************************************/
 
-int Project::getSchematicIndex(const Schematic& schematic) const noexcept {
-  return mSchematics.indexOf(const_cast<Schematic*>(&schematic));
+int Project::getSchematicIndex(const X_Schematic& schematic) const noexcept {
+  return mSchematics.indexOf(const_cast<X_Schematic*>(&schematic));
 }
 
-Schematic* Project::getSchematicByUuid(const Uuid& uuid) const noexcept {
-  foreach (Schematic* schematic, mSchematics) {
+X_Schematic* Project::getSchematicByUuid(const Uuid& uuid) const noexcept {
+  foreach (X_Schematic* schematic, mSchematics) {
     if (schematic->getUuid() == uuid) return schematic;
   }
   return nullptr;
 }
 
-Schematic* Project::getSchematicByName(const QString& name) const noexcept {
-  foreach (Schematic* schematic, mSchematics) {
+X_Schematic* Project::getSchematicByName(const QString& name) const noexcept {
+  foreach (X_Schematic* schematic, mSchematics) {
     if (schematic->getName() == name) return schematic;
   }
   return nullptr;
 }
 
-Schematic* Project::createSchematic(const ElementName& name) {
+X_Schematic* Project::createSchematic(const ElementName& name) {
   QString dirname = FilePath::cleanFileName(
       *name, FilePath::ReplaceSpaces | FilePath::ToLowerCase);
   if (dirname.isEmpty()) {
@@ -278,10 +281,10 @@ Schematic* Project::createSchematic(const ElementName& name) {
                        QString(tr("The schematic exists already: \"%1\""))
                            .arg(dir->getAbsPath().toNative()));
   }
-  return Schematic::create(*this, std::move(dir), name);
+  return X_Schematic::create(*this, std::move(dir), name);
 }
 
-void Project::addSchematic(Schematic& schematic, int newIndex) {
+void Project::addSchematic(X_Schematic& schematic, int newIndex) {
   if ((mSchematics.contains(&schematic)) || (&schematic.getProject() != this)) {
     throw LogicError(__FILE__, __LINE__);
   }
@@ -313,7 +316,7 @@ void Project::addSchematic(Schematic& schematic, int newIndex) {
   emit attributesChanged();
 }
 
-void Project::removeSchematic(Schematic& schematic, bool deleteSchematic) {
+void Project::removeSchematic(X_Schematic& schematic, bool deleteSchematic) {
   if ((!mSchematics.contains(&schematic)) ||
       (mRemovedSchematics.contains(&schematic))) {
     throw LogicError(__FILE__, __LINE__);
@@ -366,7 +369,7 @@ void Project::printSchematicPages(QPrinter& printer, QList<int>& pages) {
   QPainter painter(&printer);
 
   for (int i = 0; i < pages.count(); i++) {
-    Schematic* schematic = getSchematicByIndex(pages[i]);
+    X_Schematic* schematic = getSchematicByIndex(pages[i]);
     if (!schematic) {
       throw RuntimeError(
           __FILE__, __LINE__,
@@ -389,25 +392,25 @@ void Project::printSchematicPages(QPrinter& printer, QList<int>& pages) {
  *  Board Methods
  ******************************************************************************/
 
-int Project::getBoardIndex(const Board& board) const noexcept {
-  return mBoards.indexOf(const_cast<Board*>(&board));
+int Project::getBoardIndex(const X_Board& board) const noexcept {
+  return mBoards.indexOf(const_cast<X_Board*>(&board));
 }
 
-Board* Project::getBoardByUuid(const Uuid& uuid) const noexcept {
-  foreach (Board* board, mBoards) {
+X_Board* Project::getBoardByUuid(const Uuid& uuid) const noexcept {
+  foreach (X_Board* board, mBoards) {
     if (board->getUuid() == uuid) return board;
   }
   return nullptr;
 }
 
-Board* Project::getBoardByName(const QString& name) const noexcept {
-  foreach (Board* board, mBoards) {
+X_Board* Project::getBoardByName(const QString& name) const noexcept {
+  foreach (X_Board* board, mBoards) {
     if (board->getName() == name) return board;
   }
   return nullptr;
 }
 
-Board* Project::createBoard(const ElementName& name) {
+X_Board* Project::createBoard(const ElementName& name) {
   QString dirname = FilePath::cleanFileName(
       *name, FilePath::ReplaceSpaces | FilePath::ToLowerCase);
   if (dirname.isEmpty()) {
@@ -421,10 +424,10 @@ Board* Project::createBoard(const ElementName& name) {
                        QString(tr("The board exists already: \"%1\""))
                            .arg(dir->getAbsPath().toNative()));
   }
-  return Board::create(*this, std::move(dir), name);
+  return X_Board::create(*this, std::move(dir), name);
 }
 
-Board* Project::createBoard(const Board& other, const ElementName& name) {
+X_Board* Project::createBoard(const X_Board& other, const ElementName& name) {
   QString dirname = FilePath::cleanFileName(
       *name, FilePath::ReplaceSpaces | FilePath::ToLowerCase);
   if (dirname.isEmpty()) {
@@ -438,10 +441,10 @@ Board* Project::createBoard(const Board& other, const ElementName& name) {
                        QString(tr("The board exists already: \"%1\""))
                            .arg(dir->getAbsPath().toNative()));
   }
-  return new Board(other, std::move(dir), name);
+  return new X_Board(other, std::move(dir), name);
 }
 
-void Project::addBoard(Board& board, int newIndex) {
+void Project::addBoard(X_Board& board, int newIndex) {
   if ((mBoards.contains(&board)) || (&board.getProject() != this)) {
     throw LogicError(__FILE__, __LINE__);
   }
@@ -473,7 +476,7 @@ void Project::addBoard(Board& board, int newIndex) {
   emit attributesChanged();
 }
 
-void Project::removeBoard(Board& board, bool deleteBoard) {
+void Project::removeBoard(X_Board& board, bool deleteBoard) {
   if ((!mBoards.contains(&board)) || (mRemovedBoards.contains(&board))) {
     throw LogicError(__FILE__, __LINE__);
   }
@@ -529,7 +532,7 @@ void Project::save() {
 
   // Save schematics/schematics.lp
   SExpression schRoot = SExpression::createList("librepcb_schematics");
-  foreach (Schematic* schematic, mSchematics) {
+  foreach (X_Schematic* schematic, mSchematics) {
     schRoot.appendChild("schematic",
                         schematic->getFilePath().toRelative(getPath()), true);
   }
@@ -538,27 +541,27 @@ void Project::save() {
 
   // Save boards/boards.lp
   SExpression brdRoot = SExpression::createList("librepcb_boards");
-  foreach (Board* board, mBoards) {
+  foreach (X_Board* board, mBoards) {
     brdRoot.appendChild("board", board->getFilePath().toRelative(getPath()),
                         true);
   }
   mDirectory->write("boards/boards.lp", brdRoot.toByteArray());  // can throw
 
   // Save all removed schematics (*.lp files)
-  foreach (Schematic* schematic, mRemovedSchematics) {
+  foreach (X_Schematic* schematic, mRemovedSchematics) {
     schematic->save();  // can throw
   }
   // Save all added schematics (*.lp files)
-  foreach (Schematic* schematic, mSchematics) {
+  foreach (X_Schematic* schematic, mSchematics) {
     schematic->save();  // can throw
   }
 
   // Save all removed boards (*.lp files)
-  foreach (Board* board, mRemovedBoards) {
+  foreach (X_Board* board, mRemovedBoards) {
     board->save();  // can throw
   }
   // Save all added boards (*.lp files)
-  foreach (Board* board, mBoards) {
+  foreach (X_Board* board, mBoards) {
     board->save();  // can throw
   }
 

@@ -49,7 +49,7 @@ namespace project {
 
 SGI_Symbol::SGI_Symbol(SI_Symbol& symbol) noexcept
   : SGI_Base(), mSymbol(symbol), mLibSymbol(symbol.getLibSymbol()) {
-  setZValue(Schematic::ZValue_Symbols);
+  setZValue(X_Schematic::ZValue_Symbols);
 
   mFont = qApp->getDefaultSansSerifFont();
 

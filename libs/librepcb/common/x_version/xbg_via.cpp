@@ -5,7 +5,7 @@ namespace librepcb {
 namespace x_version {
 
 XBG_Via::XBG_Via(GraphicsScene* parent)
-  : XBG_BaseItem(parent) {
+  : XG_IF_BaseItem(parent) {
 }
 
 XBG_Via::~XBG_Via() {

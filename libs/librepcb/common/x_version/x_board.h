@@ -25,19 +25,36 @@
 
 namespace librepcb {
 
+class GridProperties;
+class BoardDesignRules;
+
+namespace project{
+class Project;
+class NetSignal;
+class BoardLayerStack;
+class BoardFabricationOutputSettings;
+class BoardUserSettings;
+}
+using namespace project;
+
 namespace x_version {
+class XB_BaseItem;
+class XB_Device;
+class XB_Path;
+class XB_Polygon;
+class XB_Text;
+class XB_Hole;
 
-class X_Board final : public QObject {
-Q_OBJECT
-
-public:
-  X_Board()                     = delete;
-  X_Board(const X_Board& other) = delete;
-  DECLARE_ERC_MSG_CLASS_NAME(Board)
+class X_Board final : public QObject,
+                      public AttributeProvider,
+                      public IF_ErcMsgProvider,
+                      public SerializableObject {
+  Q_OBJECT
+  DECLARE_ERC_MSG_CLASS_NAME(X_Board)
 
 public:
   // Constructors / Destructor
-  X_Board()                   = delete;
+  X_Board()                     = delete;
   X_Board(const X_Board& other) = delete;
   X_Board(const X_Board& other,
           std::unique_ptr<TransactionalDirectory> directory,
@@ -65,6 +82,8 @@ public:
       noexcept {
     return *mFabricationOutputSettings;
   }
+
+  QList<XB_BaseItem*> getAllItems() const noexcept;
   bool                isEmpty() const noexcept;
 
   // Setters: General
@@ -78,43 +97,40 @@ public:
   }
 
   // DeviceInstance Methods
-  const QMap<Uuid, BI_Device*>& getDeviceInstances() const noexcept {
+  const QMap<Uuid, XB_Device*>& getDeviceInstances() const noexcept {
     return mDeviceInstances;
   }
-  BI_Device* getDeviceInstanceByComponentUuid(const Uuid& uuid) const noexcept;
-  void       addDeviceInstance(BI_Device& instance);
-  void       removeDeviceInstance(BI_Device& instance);
+  XB_Device* getDeviceInstanceByComponentUuid(const Uuid& uuid) const noexcept;
+  void       addDeviceInstance(XB_Device& instance);
+  void       removeDeviceInstance(XB_Device& instance);
 
   // NetSegment Methods
-  const QList<BI_NetSegment*>& getNetSegments() const noexcept {
-    return mNetSegments;
+  const QList<XB_Path*>& getPaths() const noexcept {
+    return mPaths;
   }
-  BI_NetSegment* getNetSegmentByUuid(const Uuid& uuid) const noexcept;
-  void           addNetSegment(BI_NetSegment& netsegment);
-  void           removeNetSegment(BI_NetSegment& netsegment);
-
-  // Plane Methods
-  const QList<BI_Plane*>& getPlanes() const noexcept { return mPlanes; }
-  void                    addPlane(BI_Plane& plane);
-  void                    removePlane(BI_Plane& plane);
-  void                    rebuildAllPlanes() noexcept;
+  XB_Path* getPathByUuid(const Uuid& uuid) const noexcept;
+  void     addPath(XB_Path& path);
+  void     removePath(XB_Path& path);
 
   // Polygon Methods
-  const QList<BI_Polygon*>& getPolygons() const noexcept { return mPolygons; }
-  void                      addPolygon(BI_Polygon& polygon);
-  void                      removePolygon(BI_Polygon& polygon);
+  const QList<XB_Polygon*>& getPolygons() const noexcept {
+    return mPolygons;
+  }
+  void                      addPolygon(XB_Polygon& polygon);
+  void                      removePolygon(XB_Polygon& polygon);
+  void                      rebuildAllPolygon() noexcept;
 
   // StrokeText Methods
-  const QList<BI_StrokeText*>& getStrokeTexts() const noexcept {
-    return mStrokeTexts;
+  const QList<XB_Text*>& getTexts() const noexcept {
+    return mTexts;
   }
-  void addStrokeText(BI_StrokeText& text);
-  void removeStrokeText(BI_StrokeText& text);
+  void addText(XB_Text& text);
+  void removeText(XB_Text& text);
 
   // Hole Methods
-  const QList<BI_Hole*>& getHoles() const noexcept { return mHoles; }
-  void                   addHole(BI_Hole& hole);
-  void                   removeHole(BI_Hole& hole);
+  const QList<XB_Hole*>& getHoles() const noexcept { return mHoles; }
+  void                   addHole(XB_Hole& hole);
+  void                   removeHole(XB_Hole& hole);
 
   // General Methods
   void addToProject();
@@ -143,8 +159,8 @@ signals:
   /// @copydoc AttributeProvider::attributesChanged()
   void attributesChanged() override;
 
-  void deviceAdded(BI_Device& comp);
-  void deviceRemoved(BI_Device& comp);
+  void deviceAdded(XB_Device& comp);
+  void deviceRemoved(XB_Device& comp);
 
 private:
   X_Board(Project& project, std::unique_ptr<TransactionalDirectory> directory,
@@ -153,7 +169,7 @@ private:
   void updateErcMessages() noexcept;
 
   /// @copydoc librepcb::SerializableObject::serialize()
-  // void serialize(SExpression& root) const override;
+   void serialize(SExpression& root) const override;
 
   // General
   Project& mProject;  ///< A reference to the Project object (from the ctor)
@@ -174,13 +190,11 @@ private:
   QString     mDefaultFontFileName;
 
   // items
-  QMap<Uuid, BI_Device*>              mDeviceInstances;
-  QList<BI_NetSegment*>               mNetSegments;
-  QList<BI_Plane*>                    mPlanes;
-  QList<BI_Polygon*>                  mPolygons;
-  QList<BI_StrokeText*>               mStrokeTexts;
-  QList<BI_Hole*>                     mHoles;
-  QMultiHash<NetSignal*, BI_AirWire*> mAirWires;
+  QMap<Uuid, XB_Device*> mDeviceInstances;
+  QList<XB_Path*>        mPaths;
+  QList<XB_Polygon*>     mPolygons;
+  QList<XB_Text*>        mTexts;
+  QList<XB_Hole*>        mHoles;
 
   // ERC messages
   QHash<Uuid, ErcMsg*> mErcMsgListUnplacedComponentInstances;

@@ -3,7 +3,7 @@
 
 #include <librepcb/common/units/all_length_units.h>
 
-#include "xbg_baseitem.h"
+#include "xg_if_baseitem.h"
 #include "xb_footprint.h"
 
 #include <QtCore>
@@ -13,9 +13,9 @@ namespace librepcb {
 
 namespace x_version {
 
-class XBG_Footprint : public XBG_BaseItem {
+class XBG_Footprint : public XG_IF_BaseItem {
 public:
-  XBG_Footprint()                        = delete;
+  XBG_Footprint()                           = delete;
   XBG_Footprint(const XBG_Footprint& other) = delete;
   XBG_Footprint(GraphicsScene* parent);
   ~XBG_Footprint();
@@ -27,7 +27,7 @@ public:
   void apply() const noexcept override;
 
 private:
-  XB_Footprint*  mCircle;
+  XB_Footprint*  mFootprint;
   QPainterPath   mShape;
   QRectF         mBoundingRect;
 

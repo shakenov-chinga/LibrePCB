@@ -22,7 +22,7 @@
  ******************************************************************************/
 #include "boardlayerstack.h"
 
-#include "board.h"
+#include <librepcb/common/x_version/x_board.h>
 
 #include <QtCore>
 
@@ -30,6 +30,12 @@
  *  Namespace
  ******************************************************************************/
 namespace librepcb {
+
+namespace x_version{
+class X_Board;
+}
+using namespace x_version;
+
 namespace project {
 
 /*******************************************************************************

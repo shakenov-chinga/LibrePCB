@@ -3,7 +3,7 @@
 
 #include <librepcb/common/units/all_length_units.h>
 
-#include "xbg_baseitem.h"
+#include "xg_if_baseitem.h"
 #include "xb_polygon.h"
 
 #include <QtCore>
@@ -13,9 +13,9 @@ namespace librepcb {
 
 namespace x_version {
 
-class XBG_Polygon : public XBG_BaseItem, QGraphicsItem {
+class XBG_Polygon : public QGraphicsItem, XG_IF_BaseItem {
 public:
-  XBG_Polygon()                        = delete;
+  XBG_Polygon()                         = delete;
   XBG_Polygon(const XBG_Polygon& other) = delete;
   XBG_Polygon(GraphicsScene* parent);
   ~XBG_Polygon();
@@ -33,9 +33,9 @@ public:
                      QWidget* widget = 0);
 
 private:
-  XB_Polygon*     mCircle;
-  QPainterPath   mShape;
-  QRectF         mBoundingRect;
+  XB_Polygon*  mPolygon;
+  QPainterPath mShape;
+  QRectF       mBoundingRect;
 
 };
 

@@ -3,7 +3,7 @@
 
 #include <librepcb/common/units/all_length_units.h>
 
-#include "xbg_baseitem.h"
+#include "xg_if_baseitem.h"
 #include "xb_hole.h"
 
 #include <QtCore>
@@ -13,9 +13,9 @@ namespace librepcb {
 
 namespace x_version {
 
-class XBG_Hole : public XBG_BaseItem, QGraphicsItem {
+class XBG_Hole : public QGraphicsItem, XG_IF_BaseItem {
 public:
-  XBG_Hole()                        = delete;
+  XBG_Hole()                      = delete;
   XBG_Hole(const XBG_Hole& other) = delete;
   XBG_Hole(GraphicsScene* parent);
   ~XBG_Hole();
@@ -33,9 +33,9 @@ public:
                      QWidget* widget = 0);
 
 private:
-  XB_Hole*     mCircle;
-  QPainterPath   mShape;
-  QRectF         mBoundingRect;
+  XB_Hole*     mHole;
+  QPainterPath mShape;
+  QRectF       mBoundingRect;
 
 };
 

@@ -11,11 +11,9 @@ class GraphicsScene;
 
 namespace x_version {
 
-class XBG_BaseItem : public QObject {
-Q_OBJECT
+class XG_IF_BaseItem {
 public:
-  XBG_BaseItem(GraphicsScene* parent);
-  virtual ~XBG_BaseItem();
+  virtual ~XG_IF_BaseItem();
 
   virtual void moveTo(Point& position) const noexcept = 0;
   virtual void rotateTo(Angle& angle, Point& pivot) const noexcept = 0;

@@ -6,6 +6,7 @@
 #include <QtCore>
 
 namespace  librepcb {
+class Uuid;
 
 namespace x_version {
 
@@ -26,9 +27,12 @@ public:
 
   virtual XB_ItemType getType() const noexcept = 0;
 
-signals:
+  Uuid getUuid() const noexcept {
+    return mUuid;
+  }
 
-public slots:
+private:
+  Uuid mUuid;
 };
 
 } // namespace librepcb

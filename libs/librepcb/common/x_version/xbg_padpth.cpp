@@ -5,7 +5,7 @@ namespace librepcb {
 namespace x_version {
 
 XBG_PadPth::XBG_PadPth(GraphicsScene* parent)
-  : XBG_BaseItem(parent) {
+  : XG_IF_BaseItem(parent) {
 }
 
 XBG_PadPth::~XBG_PadPth() {

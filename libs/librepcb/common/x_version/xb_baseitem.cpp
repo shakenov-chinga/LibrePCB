@@ -1,5 +1,7 @@
 #include "xb_baseitem.h"
 
+#include <librepcb/common/uuid.h>
+
 namespace  librepcb {
 
 namespace x_version {

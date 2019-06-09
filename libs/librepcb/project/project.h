@@ -294,14 +294,14 @@ public:
    *
    * @return the board index (-1 if the board does not exist)
    */
-  int getBoardIndex(const Board& board) const noexcept;
+  int getBoardIndex(const X_Board& board) const noexcept;
 
   /**
    * @brief Get all boards
    *
    * @return A QList with all boards
    */
-  const QList<Board*>& getBoards() const noexcept { return mBoards; }
+  const QList<X_Board*>& getBoards() const noexcept { return mBoards; }
 
   /**
    * @brief Get the board at a specific index
@@ -310,7 +310,7 @@ public:
    *
    * @return A pointer to the specified board, or nullptr if index is invalid
    */
-  Board* getBoardByIndex(int index) const noexcept {
+  X_Board* getBoardByIndex(int index) const noexcept {
     return mBoards.value(index, nullptr);
   }
 
@@ -321,7 +321,7 @@ public:
    *
    * @return A pointer to the specified board, or nullptr if uuid is invalid
    */
-  Board* getBoardByUuid(const Uuid& uuid) const noexcept;
+  X_Board* getBoardByUuid(const Uuid& uuid) const noexcept;
 
   /**
    * @brief Get the board with a specific name
@@ -330,7 +330,7 @@ public:
    *
    * @return A pointer to the specified board, or nullptr if name is invalid
    */
-  Board* getBoardByName(const QString& name) const noexcept;
+  X_Board* getBoardByName(const QString& name) const noexcept;
 
   /**
    * @brief Create a new board
@@ -341,7 +341,7 @@ public:
    *
    * @throw Exception This method throws an exception on error.
    */
-  Board* createBoard(const ElementName& name);
+  X_Board* createBoard(const ElementName& name);
 
   /**
    * @brief Create a new board as a copy of an existing board
@@ -353,7 +353,7 @@ public:
    *
    * @throw Exception This method throws an exception on error.
    */
-  Board* createBoard(const Board& other, const ElementName& name);
+  X_Board* createBoard(const X_Board& other, const ElementName& name);
 
   /**
    * @brief Add an existing board to this project
@@ -365,7 +365,7 @@ public:
    *
    * @undocmd{project#CmdBoardAdd}
    */
-  void addBoard(Board& board, int newIndex = -1);
+  void addBoard(X_Board& board, int newIndex = -1);
 
   /**
    * @brief Remove a board from this project
@@ -379,7 +379,7 @@ public:
    *
    * @undocmd{project#CmdBoardRemove}
    */
-  void removeBoard(Board& board, bool deleteBoard = false);
+  void removeBoard(X_Board& board, bool deleteBoard = false);
 
   // General Methods
 
@@ -491,8 +491,8 @@ private:
       mRemovedSchematics;  ///< All removed schematics of this project
   QScopedPointer<SchematicLayerProvider>
                 mSchematicLayerProvider;  ///< All schematic layers of this project
-  QList<Board*> mBoards;                  ///< All boards of this project
-  QList<Board*> mRemovedBoards;  ///< All removed boards of this project
+  QList<X_Board*> mBoards;                  ///< All boards of this project
+  QList<X_Board*> mRemovedBoards;  ///< All removed boards of this project
   QScopedPointer<AttributeList>
       mAttributes;  ///< all attributes in a specific order
 };

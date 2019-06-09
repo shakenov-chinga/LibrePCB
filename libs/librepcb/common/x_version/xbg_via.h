@@ -3,7 +3,7 @@
 
 #include <librepcb/common/units/all_length_units.h>
 
-#include "xbg_baseitem.h"
+#include "xg_if_baseitem.h"
 #include "xb_via.h"
 
 #include <QtCore>
@@ -13,9 +13,9 @@ namespace librepcb {
 
 namespace x_version {
 
-class XBG_Via : public XBG_BaseItem, QGraphicsItem {
+class XBG_Via : public QGraphicsItem, XG_IF_BaseItem {
 public:
-  XBG_Via()                        = delete;
+  XBG_Via()                     = delete;
   XBG_Via(const XBG_Via& other) = delete;
   XBG_Via(GraphicsScene* parent);
   ~XBG_Via();
@@ -33,9 +33,9 @@ public:
                      QWidget* widget = 0);
 
 private:
-  XB_Via*     mCircle;
-  QPainterPath   mShape;
-  QRectF         mBoundingRect;
+  XB_Via*      mVia;
+  QPainterPath mShape;
+  QRectF       mBoundingRect;
 
 };
 

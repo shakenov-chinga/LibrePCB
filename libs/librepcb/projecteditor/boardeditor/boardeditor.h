@@ -165,9 +165,10 @@ private:
   QScopedPointer<ExclusiveActionGroup> mToolsActionGroup;
 
   /*>>> from schematic.h <<<*/
-  QScopedPointer<GraphicsScene>                  mGraphicsScene;
-  QRectF                                         mViewRect;
-  QIcon       mIcon;
+  QScopedPointer<GraphicsScene>       mGraphicsScene;
+  QRectF                              mViewRect;
+  QIcon                               mIcon;
+  QMultiHash<NetSignal*, BI_AirWire*> mAirWires;
   /*><*/
 
   // Misc

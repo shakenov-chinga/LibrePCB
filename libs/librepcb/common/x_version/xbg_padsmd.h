@@ -3,7 +3,7 @@
 
 #include <librepcb/common/units/all_length_units.h>
 
-#include "xbg_baseitem.h"
+#include "xg_if_baseitem.h"
 #include "xb_padsmd.h"
 
 #include <QtCore>
@@ -13,7 +13,7 @@ namespace librepcb {
 
 namespace x_version {
 
-class XBG_PadSmd : public XBG_BaseItem, QGraphicsItem {
+class XBG_PadSmd : public QGraphicsItem, XG_IF_BaseItem {
 public:
   XBG_PadSmd()                        = delete;
   XBG_PadSmd(const XBG_PadSmd& other) = delete;
@@ -33,9 +33,9 @@ public:
                      QWidget* widget = 0);
 
 private:
-  XB_PadSmd*     mCircle;
-  QPainterPath   mShape;
-  QRectF         mBoundingRect;
+  XB_PadSmd*   mPadSmd;
+  QPainterPath mShape;
+  QRectF       mBoundingRect;
 
 };
 

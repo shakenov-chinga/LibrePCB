@@ -33,9 +33,13 @@
  *  Namespace / Forward Declarations
  ******************************************************************************/
 namespace librepcb {
-namespace project {
 
+namespace x_version{
 class X_Board;
+}
+using namespace x_version;
+
+namespace project {
 
 /*******************************************************************************
  *  Class BoardLayerStack
@@ -61,7 +65,7 @@ public:
 
   // Getters
   X_Board& getBoard() const noexcept { return mBoard; }
-  int    getInnerLayerCount() const noexcept { return mInnerLayerCount; }
+  int     getInnerLayerCount() const noexcept { return mInnerLayerCount; }
   QList<GraphicsLayer*> getAllowedPolygonLayers() const noexcept;
 
   /// @copydoc IF_BoardLayerProvider#getAllBoardLayerIds()

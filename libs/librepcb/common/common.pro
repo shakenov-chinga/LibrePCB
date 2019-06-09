@@ -151,7 +151,6 @@ SOURCES += \
     x_version/xs_symbol.cpp \
     x_version/xs_line.cpp \
     x_version/xb_line.cpp \
-    x_version/xbg_baseitem.cpp \
     x_version/xbg_circle.cpp \
     x_version/xbg_footprint.cpp \
     x_version/xbg_hole.cpp \
@@ -162,7 +161,8 @@ SOURCES += \
     x_version/xbg_via.cpp \
     x_version/xbg_padpth.cpp \
     x_version/xbg_padsmd.cpp \
-    x_version/xbg_point.cpp
+    x_version/xbg_point.cpp \
+    x_version/xbg_airwire.cpp
 
 HEADERS += \
     alignment.h \
@@ -306,7 +306,6 @@ HEADERS += \
     x_version/x_textalign.h \
     x_version/xs_line.h \
     x_version/xb_line.h \
-    x_version/xbg_baseitem.h \
     x_version/xbg_circle.h \
     x_version/xbg_footprint.h \
     x_version/xbg_hole.h \
@@ -317,7 +316,9 @@ HEADERS += \
     x_version/xbg_via.h \
     x_version/xbg_padpth.h \
     x_version/xbg_padsmd.h \
-    x_version/xbg_point.h
+    x_version/xbg_point.h \
+    x_version/xbg_airwire.h \
+    x_version/xg_if_baseitem.h
 
 FORMS += \
     dialogs/aboutdialog.ui \

@@ -3,7 +3,7 @@
 
 #include <librepcb/common/units/all_length_units.h>
 
-#include "xbg_baseitem.h"
+#include "xg_if_baseitem.h"
 
 #include <QtCore>
 #include <QtWidgets>
@@ -12,9 +12,9 @@ namespace librepcb {
 
 namespace x_version {
 
-class XBG_Point : public XBG_BaseItem{
+class XBG_Point : public XG_IF_BaseItem{
 public:
-  XBG_Point()                        = delete;
+  XBG_Point()                       = delete;
   XBG_Point(const XBG_Point& other) = delete;
   XBG_Point(GraphicsScene* parent);
   ~XBG_Point();
@@ -26,8 +26,8 @@ public:
   void apply() const noexcept override;
 
 private:
-  QPainterPath   mShape;
-  QRectF         mBoundingRect;
+  QPainterPath mShape;
+  QRectF       mBoundingRect;
 
 };
 

@@ -1,5 +1,18 @@
 #include "x_board.h"
 
+#include "xb_baseitem.h"
+#include "xb_circle.h"
+#include "xb_device.h"
+#include "xb_footprint.h"
+#include "xb_hole.h"
+#include "xb_line.h"
+#include "xb_padpth.h"
+#include "xb_padsmd.h"
+#include "xb_path.h"
+#include "xb_polygon.h"
+#include "xb_text.h"
+#include "xb_via.h"
+
 #include <librepcb/project/circuit/circuit.h>
 #include <librepcb/project/circuit/componentinstance.h>
 #include <librepcb/project/circuit/netsignal.h>
@@ -26,6 +39,8 @@
 
 namespace librepcb {
 
+using namespace project;
+
 namespace x_version {
 
 /*******************************************************************************
@@ -43,8 +58,6 @@ X_Board::X_Board(const X_Board&                          other,
     mName(name),
     mDefaultFontFileName(other.mDefaultFontFileName) {
   try {
-    mGraphicsScene.reset(new GraphicsScene());
-
     // copy layer stack
     mLayerStack.reset(new BoardLayerStack(*this, *other.mLayerStack));
 
@@ -62,9 +75,9 @@ X_Board::X_Board(const X_Board&                          other,
     mUserSettings.reset(new BoardUserSettings(*this, *other.mUserSettings));
 
     // copy device instances
-    QHash<const BI_Device*, BI_Device*> copiedDeviceInstances;
-    foreach (const BI_Device* device, other.mDeviceInstances) {
-      BI_Device* copy = new BI_Device(*this, *device);
+    QHash<const XB_Device*, XB_Device*> copiedDeviceInstances;
+    foreach (const XB_Device* device, other.mDeviceInstances) {
+      XB_Device* copy = new XB_Device(*this, *device);
       Q_ASSERT(
           !getDeviceInstanceByComponentUuid(copy->getComponentInstanceUuid()));
       mDeviceInstances.insert(copy->getComponentInstanceUuid(), copy);
@@ -72,34 +85,28 @@ X_Board::X_Board(const X_Board&                          other,
     }
 
     // copy netsegments
-    foreach (const BI_NetSegment* netsegment, other.mNetSegments) {
-      BI_NetSegment* copy =
-          new BI_NetSegment(*this, *netsegment, copiedDeviceInstances);
-      Q_ASSERT(!getNetSegmentByUuid(copy->getUuid()));
-      mNetSegments.append(copy);
-    }
-
-    // copy planes
-    foreach (const BI_Plane* plane, other.mPlanes) {
-      BI_Plane* copy = new BI_Plane(*this, *plane);
-      mPlanes.append(copy);
+    foreach (const XB_Path* path, other.mPaths) {
+      XB_Path* copy =
+          new XB_Path(*this, *path, copiedDeviceInstances);
+      Q_ASSERT(!getPathByUuid(copy->getUuid()));
+      mPaths.append(copy);
     }
 
     // copy polygons
-    foreach (const BI_Polygon* polygon, other.mPolygons) {
-      BI_Polygon* copy = new BI_Polygon(*this, *polygon);
+    foreach (const XB_Polygon* polygon, other.mPolygons) {
+      XB_Polygon* copy = new XB_Polygon(*this, *polygon);
       mPolygons.append(copy);
     }
 
     // copy stroke texts
-    foreach (const BI_StrokeText* text, other.mStrokeTexts) {
-      BI_StrokeText* copy = new BI_StrokeText(*this, *text);
-      mStrokeTexts.append(copy);
+    foreach (const XB_Text* text, other.mTexts) {
+      XB_Text* copy = new XB_Text(*this, *text);
+      mTexts.append(copy);
     }
 
     // copy holes
-    foreach (const BI_Hole* hole, other.mHoles) {
-      BI_Hole* copy = new BI_Hole(*this, *hole);
+    foreach (const XB_Hole* hole, other.mHoles) {
+      XB_Hole* copy = new XB_Hole(*this, *hole);
       mHoles.append(copy);
     }
 
@@ -120,18 +127,14 @@ X_Board::X_Board(const X_Board&                          other,
     // free the allocated memory in the reverse order of their allocation...
     qDeleteAll(mErcMsgListUnplacedComponentInstances);
     mErcMsgListUnplacedComponentInstances.clear();
-    qDeleteAll(mAirWires);
-    mAirWires.clear();
     qDeleteAll(mHoles);
     mHoles.clear();
-    qDeleteAll(mStrokeTexts);
-    mStrokeTexts.clear();
+    qDeleteAll(mTexts);
+    mTexts.clear();
     qDeleteAll(mPolygons);
     mPolygons.clear();
-    qDeleteAll(mPlanes);
-    mPlanes.clear();
-    qDeleteAll(mNetSegments);
-    mNetSegments.clear();
+    qDeleteAll(mPaths);
+    mPaths.clear();
     qDeleteAll(mDeviceInstances);
     mDeviceInstances.clear();
     mUserSettings.reset();
@@ -139,7 +142,6 @@ X_Board::X_Board(const X_Board&                          other,
     mDesignRules.reset();
     mGridProperties.reset();
     mLayerStack.reset();
-    mGraphicsScene.reset();
     throw;  // ...and rethrow the exception
   }
 }
@@ -154,7 +156,6 @@ X_Board::X_Board(Project&                                project,
     mUuid(Uuid::createRandom()),
     mName("New X_Board") {
   try {
-    mGraphicsScene.reset(new GraphicsScene());
 
     // try to open/create the board file
     if (create) {
@@ -185,7 +186,7 @@ X_Board::X_Board(Project&                                project,
                       GraphicsLayerName(GraphicsLayer::sBoardOutlines),
                       UnsignedLength(0), false, false,
                       Path::rect(Point(0, 0), Point(100000000, 80000000)));
-      mPolygons.append(new BI_Polygon(*this, polygon));
+      mPolygons.append(new XB_Polygon(*this, polygon));
     } else {
       SExpression root = SExpression::parse(
           mDirectory->read(getFilePath().getFilename()), getFilePath());
@@ -235,7 +236,7 @@ X_Board::X_Board(Project&                                project,
 
       // Load all device instances
       foreach (const SExpression& node, root.getChildren("device")) {
-        BI_Device* device = new BI_Device(*this, node);
+        XB_Device* device = new XB_Device(*this, node);
         if (getDeviceInstanceByComponentUuid(
                 device->getComponentInstanceUuid())) {
           throw RuntimeError(
@@ -248,15 +249,15 @@ X_Board::X_Board(Project&                                project,
       }
 
       // Load all netsegments
-      foreach (const SExpression& node, root.getChildren("netsegment")) {
-        BI_NetSegment* netsegment = new BI_NetSegment(*this, node);
-        if (getNetSegmentByUuid(netsegment->getUuid())) {
+      foreach (const SExpression& node, root.getChildren("path")) {
+        XB_Path* path = new XB_Path(*this, node);
+        if (getPathByUuid(path->getUuid())) {
           throw RuntimeError(
               __FILE__, __LINE__,
-              QString(tr("There is already a netsegment with the UUID \"%1\"!"))
-                  .arg(netsegment->getUuid().toStr()));
+              QString(tr("There is already a path with the UUID \"%1\"!"))
+                  .arg(path->getUuid().toStr()));
         }
-        mNetSegments.append(netsegment);
+        mPaths.append(path);
       }
 
       // Load all planes
@@ -267,19 +268,19 @@ X_Board::X_Board(Project&                                project,
 
       // Load all polygons
       foreach (const SExpression& node, root.getChildren("polygon")) {
-        BI_Polygon* polygon = new BI_Polygon(*this, node);
+        XB_Polygon* polygon = new XB_Polygon(*this, node);
         mPolygons.append(polygon);
       }
 
       // Load all stroke texts
       foreach (const SExpression& node, root.getChildren("stroke_text")) {
-        BI_StrokeText* text = new BI_StrokeText(*this, node);
-        mStrokeTexts.append(text);
+        XB_Text* text = new XB_Text(*this, node);
+        mTexts.append(text);
       }
 
       // Load all holes
       foreach (const SExpression& node, root.getChildren("hole")) {
-        BI_Hole* hole = new BI_Hole(*this, node);
+        XB_Hole* hole = new XB_Hole(*this, node);
         mHoles.append(hole);
       }
     }
@@ -300,18 +301,14 @@ X_Board::X_Board(Project&                                project,
     // free the allocated memory in the reverse order of their allocation...
     qDeleteAll(mErcMsgListUnplacedComponentInstances);
     mErcMsgListUnplacedComponentInstances.clear();
-    qDeleteAll(mAirWires);
-    mAirWires.clear();
     qDeleteAll(mHoles);
     mHoles.clear();
-    qDeleteAll(mStrokeTexts);
-    mStrokeTexts.clear();
+    qDeleteAll(mTexts);
+    mTexts.clear();
     qDeleteAll(mPolygons);
     mPolygons.clear();
-    qDeleteAll(mPlanes);
-    mPlanes.clear();
-    qDeleteAll(mNetSegments);
-    mNetSegments.clear();
+    qDeleteAll(mPaths);
+    mPaths.clear();
     qDeleteAll(mDeviceInstances);
     mDeviceInstances.clear();
     mUserSettings.reset();
@@ -319,7 +316,6 @@ X_Board::X_Board(Project&                                project,
     mDesignRules.reset();
     mGridProperties.reset();
     mLayerStack.reset();
-    mGraphicsScene.reset();
     throw;  // ...and rethrow the exception
   }
 }
@@ -331,18 +327,14 @@ X_Board::~X_Board() noexcept {
   mErcMsgListUnplacedComponentInstances.clear();
 
   // delete all items
-  qDeleteAll(mAirWires);
-  mAirWires.clear();
   qDeleteAll(mHoles);
   mHoles.clear();
-  qDeleteAll(mStrokeTexts);
-  mStrokeTexts.clear();
+  qDeleteAll(mTexts);
+  mTexts.clear();
   qDeleteAll(mPolygons);
   mPolygons.clear();
-  qDeleteAll(mPlanes);
-  mPlanes.clear();
-  qDeleteAll(mNetSegments);
-  mNetSegments.clear();
+  qDeleteAll(mPaths);
+  mPaths.clear();
   qDeleteAll(mDeviceInstances);
   mDeviceInstances.clear();
 
@@ -351,7 +343,6 @@ X_Board::~X_Board() noexcept {
   mDesignRules.reset();
   mGridProperties.reset();
   mLayerStack.reset();
-  mGraphicsScene.reset();
 }
 
 /*******************************************************************************
@@ -363,159 +354,22 @@ FilePath X_Board::getFilePath() const noexcept {
 }
 
 bool X_Board::isEmpty() const noexcept {
-  return (mDeviceInstances.isEmpty() && mNetSegments.isEmpty() &&
-          mPlanes.isEmpty() && mPolygons.isEmpty() && mStrokeTexts.isEmpty() &&
-          mHoles.isEmpty());
+  return (mDeviceInstances.isEmpty() && mPaths.isEmpty() && mPolygons.isEmpty()
+          && mTexts.isEmpty() && mHoles.isEmpty());
 }
 
-QList<BI_Base*> X_Board::getItemsAtScenePos(const Point& pos) const noexcept {
-  QPointF scenePosPx = pos.toPxQPointF();
-  QList<BI_Base*>
-      list;  // Note: The order of adding the items is very important (the
-             // top most item must appear as the first item in the list)!
-  // vias
-  foreach (BI_Via* via, getViasAtScenePos(pos, nullptr)) { list.append(via); }
-  // netpoints
-  foreach (BI_NetPoint* netpoint,
-           getNetPointsAtScenePos(pos, nullptr, nullptr)) {
-    list.append(netpoint);
-  }
-  // netlines
-  foreach (BI_NetLine* netline, getNetLinesAtScenePos(pos, nullptr, nullptr)) {
-    list.append(netline);
-  }
-  // footprints & pads
-  foreach (BI_Device* device, mDeviceInstances) {
-    BI_Footprint& footprint = device->getFootprint();
-    if (footprint.isSelectable() &&
-        footprint.getGrabAreaScenePx().contains(scenePosPx)) {
-      if (footprint.getIsMirrored()) {
-        list.append(&footprint);
-      } else {
-        list.prepend(&footprint);
-      }
-    }
-    foreach (BI_FootprintPad* pad, footprint.getPads()) {
-      if (pad->isSelectable() &&
-          pad->getGrabAreaScenePx().contains(scenePosPx)) {
-        if (pad->getIsMirrored()) {
-          list.append(pad);
-        } else {
-          list.insert(1, pad);
-        }
-      }
-    }
-    foreach (BI_StrokeText* text, device->getFootprint().getStrokeTexts()) {
-      if (text->isSelectable() &&
-          text->getGrabAreaScenePx().contains(scenePosPx)) {
-        if (GraphicsLayer::isTopLayer(*text->getText().getLayerName())) {
-          list.prepend(text);
-        } else {
-          list.append(text);
-        }
-      }
-    }
-  }
-  // planes
-  foreach (BI_Plane* planes, mPlanes) {
-    if (planes->isSelectable() &&
-        planes->getGrabAreaScenePx().contains(scenePosPx)) {
-      list.append(planes);
-    }
-  }
-  // polygons
-  foreach (BI_Polygon* polygon, mPolygons) {
-    if (polygon->isSelectable() &&
-        polygon->getGrabAreaScenePx().contains(scenePosPx)) {
-      list.append(polygon);
-    }
-  }
-  // texts
-  foreach (BI_StrokeText* text, mStrokeTexts) {
-    if (text->isSelectable() &&
-        text->getGrabAreaScenePx().contains(scenePosPx)) {
-      list.append(text);
-    }
-  }
-  // holes
-  foreach (BI_Hole* hole, mHoles) {
-    if (hole->isSelectable() &&
-        hole->getGrabAreaScenePx().contains(scenePosPx)) {
-      list.append(hole);
-    }
-  }
-  return list;
-}
-
-QList<BI_Via*> X_Board::getViasAtScenePos(const Point&     pos,
-                                        const NetSignal* netsignal) const
-    noexcept {
-  QList<BI_Via*> list;
-  foreach (BI_NetSegment* segment, mNetSegments) {
-    if ((!netsignal) || (&segment->getNetSignal() == netsignal)) {
-      segment->getViasAtScenePos(pos, list);
-    }
-  }
-  return list;
-}
-
-QList<BI_NetPoint*> X_Board::getNetPointsAtScenePos(
-    const Point& pos, const GraphicsLayer* layer,
-    const NetSignal* netsignal) const noexcept {
-  QList<BI_NetPoint*> list;
-  foreach (BI_NetSegment* segment, mNetSegments) {
-    if ((!netsignal) || (&segment->getNetSignal() == netsignal)) {
-      segment->getNetPointsAtScenePos(pos, layer, list);
-    }
-  }
-  return list;
-}
-
-QList<BI_NetLine*> X_Board::getNetLinesAtScenePos(
-    const Point& pos, const GraphicsLayer* layer,
-    const NetSignal* netsignal) const noexcept {
-  QList<BI_NetLine*> list;
-  foreach (BI_NetSegment* segment, mNetSegments) {
-    if ((!netsignal) || (&segment->getNetSignal() == netsignal)) {
-      segment->getNetLinesAtScenePos(pos, layer, list);
-    }
-  }
-  return list;
-}
-
-QList<BI_FootprintPad*> X_Board::getPadsAtScenePos(
-    const Point& pos, const GraphicsLayer* layer,
-    const NetSignal* netsignal) const noexcept {
-  QList<BI_FootprintPad*> list;
-  foreach (BI_Device* device, mDeviceInstances) {
-    foreach (BI_FootprintPad* pad, device->getFootprint().getPads()) {
-      if (pad->isSelectable() &&
-          pad->getGrabAreaScenePx().contains(pos.toPxQPointF()) &&
-          ((!layer) || (pad->isOnLayer(layer->getName()))) &&
-          ((!netsignal) || (pad->getCompSigInstNetSignal() == netsignal))) {
-        list.append(pad);
-      }
-    }
-  }
-  return list;
-}
-
-QList<BI_Base*> X_Board::getAllItems() const noexcept {
-  QList<BI_Base*> items;
-  foreach (BI_Device* device, mDeviceInstances)
+QList<XB_BaseItem*> X_Board::getAllItems() const noexcept {
+  QList<XB_BaseItem*> items;
+  foreach (XB_Device* device, mDeviceInstances)
     items.append(device);
-  foreach (BI_NetSegment* netsegment, mNetSegments)
-    items.append(netsegment);
-  foreach (BI_Plane* plane, mPlanes)
-    items.append(plane);
-  foreach (BI_Polygon* polygon, mPolygons)
+  foreach (XB_Path* path, mPaths)
+    items.append(path);
+  foreach (XB_Polygon* polygon, mPolygons)
     items.append(polygon);
-  foreach (BI_StrokeText* text, mStrokeTexts)
+  foreach (XB_Text* text, mTexts)
     items.append(text);
-  foreach (BI_Hole* hole, mHoles)
+  foreach (XB_Hole* hole, mHoles)
     items.append(hole);
-  foreach (BI_AirWire* airWire, mAirWires)
-    items.append(airWire);
   return items;
 }
 
@@ -531,12 +385,12 @@ void X_Board::setGridProperties(const GridProperties& grid) noexcept {
  *  DeviceInstance Methods
  ******************************************************************************/
 
-BI_Device* X_Board::getDeviceInstanceByComponentUuid(const Uuid& uuid) const
+XB_Device* X_Board::getDeviceInstanceByComponentUuid(const Uuid& uuid) const
     noexcept {
   return mDeviceInstances.value(uuid, nullptr);
 }
 
-void X_Board::addDeviceInstance(BI_Device& instance) {
+void X_Board::addDeviceInstance(XB_Device& instance) {
   if ((!mIsAddedToProject) || (&instance.getBoard() != this)) {
     throw LogicError(__FILE__, __LINE__);
   }
@@ -556,7 +410,7 @@ void X_Board::addDeviceInstance(BI_Device& instance) {
   emit deviceAdded(instance);
 }
 
-void X_Board::removeDeviceInstance(BI_Device& instance) {
+void X_Board::removeDeviceInstance(XB_Device& instance) {
   if ((!mIsAddedToProject) ||
       (!mDeviceInstances.contains(instance.getComponentInstanceUuid()))) {
     throw LogicError(__FILE__, __LINE__);
@@ -572,74 +426,44 @@ void X_Board::removeDeviceInstance(BI_Device& instance) {
  *  NetSegment Methods
  ******************************************************************************/
 
-BI_NetSegment* X_Board::getNetSegmentByUuid(const Uuid& uuid) const noexcept {
-  foreach (BI_NetSegment* netsegment, mNetSegments) {
-    if (netsegment->getUuid() == uuid) return netsegment;
+XB_Path* X_Board::getPathByUuid(const Uuid& uuid) const noexcept {
+  foreach (XB_Path* path, mPaths) {
+    if (path->getUuid() == uuid) return path;
   }
   return nullptr;
 }
 
-void X_Board::addNetSegment(BI_NetSegment& netsegment) {
-  if ((!mIsAddedToProject) || (mNetSegments.contains(&netsegment)) ||
-      (&netsegment.getBoard() != this)) {
+void X_Board::addPath(XB_Path& path) {
+  if ((!mIsAddedToProject) || (mPaths.contains(&path)) ||
+      (&path.getBoard() != this)) {
     throw LogicError(__FILE__, __LINE__);
   }
-  // check if there is no netsegment with the same uuid in the list
-  if (getNetSegmentByUuid(netsegment.getUuid())) {
+  // check if there is no path with the same uuid in the list
+  if (getPathByUuid(path.getUuid())) {
     throw RuntimeError(
         __FILE__, __LINE__,
-        QString(tr("There is already a netsegment with the UUID \"%1\"!"))
-            .arg(netsegment.getUuid().toStr()));
+        QString(tr("There is already a path with the UUID \"%1\"!"))
+            .arg(path.getUuid().toStr()));
   }
   // add to board
-  netsegment.addToBoard();  // can throw
-  mNetSegments.append(&netsegment);
+  path.addToBoard();  // can throw
+  mPaths.append(&path);
 }
 
-void X_Board::removeNetSegment(BI_NetSegment& netsegment) {
-  if ((!mIsAddedToProject) || (!mNetSegments.contains(&netsegment))) {
+void X_Board::removePath(XB_Path& path) {
+  if ((!mIsAddedToProject) || (!mPaths.contains(&path))) {
     throw LogicError(__FILE__, __LINE__);
   }
   // remove from board
-  netsegment.removeFromBoard();  // can throw
-  mNetSegments.removeOne(&netsegment);
-}
-
-/*******************************************************************************
- *  Plane Methods
- ******************************************************************************/
-
-void X_Board::addPlane(BI_Plane& plane) {
-  if ((!mIsAddedToProject) || (mPlanes.contains(&plane)) ||
-      (&plane.getBoard() != this)) {
-    throw LogicError(__FILE__, __LINE__);
-  }
-  plane.addToBoard();  // can throw
-  mPlanes.append(&plane);
-}
-
-void X_Board::removePlane(BI_Plane& plane) {
-  if ((!mIsAddedToProject) || (!mPlanes.contains(&plane))) {
-    throw LogicError(__FILE__, __LINE__);
-  }
-  plane.removeFromBoard();  // can throw
-  mPlanes.removeOne(&plane);
-}
-
-void X_Board::rebuildAllPlanes() noexcept {
-  QList<BI_Plane*> planes = mPlanes;
-  qSort(planes.begin(), planes.end(),
-        [](const BI_Plane* p1, const BI_Plane* p2) {
-          return !(*p1 < *p2);
-        });  // sort by priority (highest priority first)
-  foreach (BI_Plane* plane, planes) { plane->rebuild(); }
+  path.removeFromBoard();  // can throw
+  mPaths.removeOne(&path);
 }
 
 /*******************************************************************************
  *  Polygon Methods
  ******************************************************************************/
 
-void X_Board::addPolygon(BI_Polygon& polygon) {
+void X_Board::addPolygon(XB_Polygon& polygon) {
   if ((!mIsAddedToProject) || (mPolygons.contains(&polygon)) ||
       (&polygon.getBoard() != this)) {
     throw LogicError(__FILE__, __LINE__);
@@ -648,7 +472,7 @@ void X_Board::addPolygon(BI_Polygon& polygon) {
   mPolygons.append(&polygon);
 }
 
-void X_Board::removePolygon(BI_Polygon& polygon) {
+void X_Board::removePolygon(XB_Polygon& polygon) {
   if ((!mIsAddedToProject) || (!mPolygons.contains(&polygon))) {
     throw LogicError(__FILE__, __LINE__);
   }
@@ -660,28 +484,28 @@ void X_Board::removePolygon(BI_Polygon& polygon) {
  *  StrokeText Methods
  ******************************************************************************/
 
-void X_Board::addStrokeText(BI_StrokeText& text) {
-  if ((!mIsAddedToProject) || (mStrokeTexts.contains(&text)) ||
+void X_Board::addStrokeText(XB_Text& text) {
+  if ((!mIsAddedToProject) || (mTexts.contains(&text)) ||
       (&text.getBoard() != this)) {
     throw LogicError(__FILE__, __LINE__);
   }
   text.addToBoard();  // can throw
-  mStrokeTexts.append(&text);
+  mTexts.append(&text);
 }
 
-void X_Board::removeStrokeText(BI_StrokeText& text) {
-  if ((!mIsAddedToProject) || (!mStrokeTexts.contains(&text))) {
+void X_Board::removeStrokeText(XB_Text& text) {
+  if ((!mIsAddedToProject) || (!mTexts.contains(&text))) {
     throw LogicError(__FILE__, __LINE__);
   }
   text.removeFromBoard();  // can throw
-  mStrokeTexts.removeOne(&text);
+  mTexts.removeOne(&text);
 }
 
 /*******************************************************************************
  *  Hole Methods
  ******************************************************************************/
 
-void X_Board::addHole(BI_Hole& hole) {
+void X_Board::addHole(XB_Hole& hole) {
   if ((!mIsAddedToProject) || (mHoles.contains(&hole)) ||
       (&hole.getBoard() != this)) {
     throw LogicError(__FILE__, __LINE__);
@@ -690,7 +514,7 @@ void X_Board::addHole(BI_Hole& hole) {
   mHoles.append(&hole);
 }
 
-void X_Board::removeHole(BI_Hole& hole) {
+void X_Board::removeHole(XB_Hole& hole) {
   if ((!mIsAddedToProject) || (!mHoles.contains(&hole))) {
     throw LogicError(__FILE__, __LINE__);
   }
@@ -699,85 +523,39 @@ void X_Board::removeHole(BI_Hole& hole) {
 }
 
 /*******************************************************************************
- *  AirWire Methods
- ******************************************************************************/
-
-void X_Board::triggerAirWiresRebuild() noexcept {
-  if (!mIsAddedToProject) {
-    return;
-  }
-
-  try {
-    foreach (NetSignal* netsignal, mScheduledNetSignalsForAirWireRebuild) {
-      // remove old airwires
-      while (BI_AirWire* airWire = mAirWires.take(netsignal)) {
-        airWire->removeFromBoard();  // can throw
-        delete airWire;
-      }
-
-      if (netsignal && netsignal->isAddedToCircuit()) {
-        // calculate new airwires
-        BoardAirWiresBuilder         builder(*this, *netsignal);
-        QVector<QPair<Point, Point>> airwires = builder.buildAirWires();
-
-        // add new airwires
-        foreach (const auto& points, airwires) {
-          QScopedPointer<BI_AirWire> airWire(
-              new BI_AirWire(*this, *netsignal, points.first, points.second));
-          airWire->addToBoard();  // can throw
-          mAirWires.insertMulti(netsignal, airWire.take());
-        }
-      }
-    }
-    mScheduledNetSignalsForAirWireRebuild.clear();
-  } catch (const std::exception&
-               e) {  // std::exception because of the many std containers...
-    qCritical() << "Failed to build airwires:" << e.what();
-  }
-}
-
-void X_Board::forceAirWiresRebuild() noexcept {
-  mScheduledNetSignalsForAirWireRebuild.unite(
-      mProject.getCircuit().getNetSignals().values().toSet());
-  mScheduledNetSignalsForAirWireRebuild.unite(mAirWires.keys().toSet());
-  triggerAirWiresRebuild();
-}
-
-/*******************************************************************************
  *  General Methods
  ******************************************************************************/
 
 void X_Board::addToProject() {
-  if (mIsAddedToProject) {
-    throw LogicError(__FILE__, __LINE__);
-  }
-  QList<BI_Base*> items = getAllItems();
-  ScopeGuardList  sgl(items.count());
-  for (int i = 0; i < items.count(); ++i) {
-    BI_Base* item = items.at(i);
-    item->addToBoard();  // can throw
-    sgl.add([item]() { item->removeFromBoard(); });
-  }
-  mIsAddedToProject = true;
-  forceAirWiresRebuild();
-  updateErcMessages();
-  sgl.dismiss();
+//  if (mIsAddedToProject) {
+//    throw LogicError(__FILE__, __LINE__);
+//  }
+//  QList<XB_BaseItem*> items = getAllItems();
+//  ScopeGuardList  sgl(items.count());
+//  for (int i = 0; i < items.count(); ++i) {
+//    XB_BaseItem* item = items.at(i);
+//    item->addToBoard();  // can throw
+//    sgl.add([item]() { item->removeFromBoard(); });
+//  }
+//  mIsAddedToProject = true;
+//  updateErcMessages();
+//  sgl.dismiss();
 }
 
 void X_Board::removeFromProject() {
-  if (!mIsAddedToProject) {
-    throw LogicError(__FILE__, __LINE__);
-  }
-  QList<BI_Base*> items = getAllItems();
-  ScopeGuardList  sgl(items.count());
-  for (int i = items.count() - 1; i >= 0; --i) {
-    BI_Base* item = items.at(i);
-    item->removeFromBoard();  // can throw
-    sgl.add([item]() { item->addToBoard(); });
-  }
-  mIsAddedToProject = false;
-  updateErcMessages();
-  sgl.dismiss();
+//  if (!mIsAddedToProject) {
+//    throw LogicError(__FILE__, __LINE__);
+//  }
+//  QList<XB_BaseItem*> items = getAllItems();
+//  ScopeGuardList  sgl(items.count());
+//  for (int i = items.count() - 1; i >= 0; --i) {
+//    XB_BaseItem* item = items.at(i);
+//    item->removeFromBoard();  // can throw
+//    sgl.add([item]() { item->addToBoard(); });
+//  }
+//  mIsAddedToProject = false;
+//  updateErcMessages();
+//  sgl.dismiss();
 }
 
 void X_Board::save() {
@@ -794,74 +572,6 @@ void X_Board::save() {
   } else {
     mDirectory->removeDirRecursively();  // can throw
   }
-}
-
-void X_Board::showInView(GraphicsView& view) noexcept {
-  view.setScene(mGraphicsScene.data());
-}
-
-void X_Board::setSelectionRect(const Point& p1, const Point& p2,
-                             bool updateItems) noexcept {
-  mGraphicsScene->setSelectionRect(p1, p2);
-  if (updateItems) {
-    QRectF rectPx = QRectF(p1.toPxQPointF(), p2.toPxQPointF()).normalized();
-    foreach (BI_Device* component, mDeviceInstances) {
-      BI_Footprint& footprint       = component->getFootprint();
-      bool          selectFootprint = footprint.isSelectable() &&
-                             footprint.getGrabAreaScenePx().intersects(rectPx);
-      footprint.setSelected(selectFootprint);
-      foreach (BI_FootprintPad* pad, footprint.getPads()) {
-        bool selectPad =
-            pad->isSelectable() && pad->getGrabAreaScenePx().intersects(rectPx);
-        pad->setSelected(selectFootprint || selectPad);
-      }
-      foreach (BI_StrokeText* text, footprint.getStrokeTexts()) {
-        bool selectText = text->isSelectable() &&
-                          text->getGrabAreaScenePx().intersects(rectPx);
-        text->setSelected(selectFootprint || selectText);
-      }
-    }
-    foreach (BI_NetSegment* segment, mNetSegments) {
-      segment->setSelectionRect(rectPx);
-    }
-    foreach (BI_Plane* plane, mPlanes) {
-      bool select = plane->isSelectable() &&
-                    plane->getGrabAreaScenePx().intersects(rectPx);
-      plane->setSelected(select);
-    }
-    foreach (BI_Polygon* polygon, mPolygons) {
-      bool select = polygon->isSelectable() &&
-                    polygon->getGrabAreaScenePx().intersects(rectPx);
-      polygon->setSelected(select);
-    }
-    foreach (BI_StrokeText* text, mStrokeTexts) {
-      bool select =
-          text->isSelectable() && text->getGrabAreaScenePx().intersects(rectPx);
-      text->setSelected(select);
-    }
-    foreach (BI_Hole* hole, mHoles) {
-      bool select =
-          hole->isSelectable() && hole->getGrabAreaScenePx().intersects(rectPx);
-      hole->setSelected(select);
-    }
-  }
-}
-
-void X_Board::clearSelection() const noexcept {
-  foreach (BI_Device* device, mDeviceInstances)
-    device->getFootprint().setSelected(false);
-  foreach (BI_NetSegment* segment, mNetSegments) { segment->clearSelection(); }
-  foreach (BI_Plane* plane, mPlanes) { plane->setSelected(false); }
-  foreach (BI_Polygon* polygon, mPolygons) { polygon->setSelected(false); }
-  foreach (BI_StrokeText* text, mStrokeTexts) { text->setSelected(false); }
-  foreach (BI_Hole* hole, mHoles) { hole->setSelected(false); }
-}
-
-std::unique_ptr<BoardSelectionQuery> X_Board::createSelectionQuery() const
-    noexcept {
-  return std::unique_ptr<BoardSelectionQuery>(new BoardSelectionQuery(
-      mDeviceInstances, mNetSegments, mPlanes, mPolygons, mStrokeTexts, mHoles,
-      const_cast<X_Board*>(this)));
 }
 
 /*******************************************************************************
@@ -885,10 +595,6 @@ QVector<const AttributeProvider*> X_Board::getAttributeProviderParents() const
  *  Private Methods
  ******************************************************************************/
 
-void X_Board::updateIcon() noexcept {
-  mIcon = QIcon(mGraphicsScene->toPixmap(QSize(297, 210), Qt::white));
-}
-
 void X_Board::serialize(SExpression& root) const {
   root.appendChild(mUuid);
   root.appendChild("name", mName, true);
@@ -902,13 +608,11 @@ void X_Board::serialize(SExpression& root) const {
   root.appendLineBreak();
   serializePointerContainer(root, mDeviceInstances, "device");
   root.appendLineBreak();
-  serializePointerContainerUuidSorted(root, mNetSegments, "netsegment");
-  root.appendLineBreak();
-  serializePointerContainerUuidSorted(root, mPlanes, "plane");
+  serializePointerContainerUuidSorted(root, mPaths, "path");
   root.appendLineBreak();
   serializePointerContainerUuidSorted(root, mPolygons, "polygon");
   root.appendLineBreak();
-  serializePointerContainerUuidSorted(root, mStrokeTexts, "stroke_text");
+  serializePointerContainerUuidSorted(root, mTexts, "text");
   root.appendLineBreak();
   serializePointerContainerUuidSorted(root, mHoles, "hole");
   root.appendLineBreak();
@@ -921,7 +625,7 @@ void X_Board::updateErcMessages() noexcept {
         mProject.getCircuit().getComponentInstances();
     foreach (const ComponentInstance* component, componentInstances) {
       if (component->getLibComponent().isSchematicOnly()) continue;
-      BI_Device* device = mDeviceInstances.value(component->getUuid());
+      XB_Device* device = mDeviceInstances.value(component->getUuid());
       ErcMsg*    ercMsg =
           mErcMsgListUnplacedComponentInstances.value(component->getUuid());
       if ((!device) && (!ercMsg)) {

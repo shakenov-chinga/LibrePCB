@@ -5,7 +5,7 @@ namespace librepcb {
 namespace x_version {
 
 XBG_Footprint::XBG_Footprint(GraphicsScene* parent)
-  : XBG_BaseItem(parent) {
+  : XG_IF_BaseItem(parent) {
 }
 
 XBG_Footprint::~XBG_Footprint() {

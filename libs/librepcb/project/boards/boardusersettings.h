@@ -34,9 +34,12 @@ namespace librepcb {
 
 class GraphicsLayerStackAppearanceSettings;
 
-namespace project {
-
+namespace x_version{
 class X_Board;
+}
+using namespace x_version;
+
+namespace project {
 
 /*******************************************************************************
  *  Class BoardUserSettings

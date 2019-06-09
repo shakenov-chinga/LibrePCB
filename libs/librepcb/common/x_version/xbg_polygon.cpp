@@ -5,7 +5,7 @@ namespace librepcb {
 namespace x_version {
 
 XBG_Polygon::XBG_Polygon(GraphicsScene* parent)
-  : XBG_BaseItem(parent) {
+  : XG_IF_BaseItem(parent) {
 }
 
 XBG_Polygon::~XBG_Polygon() {

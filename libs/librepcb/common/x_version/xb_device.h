@@ -9,7 +9,20 @@
 
 namespace librepcb {
 
+namespace project {
+class ComponentInstance;
+}
+using namespace project;
+
+namespace library{
+class Device;
+class Package;
+class Footprint;
+}
+using namespace library;
+
 namespace x_version {
+class XB_Footprint;
 
 class XB_Device : public XB_BaseItem {
 Q_OBJECT
@@ -22,6 +35,14 @@ public:
   XB_ItemType getType() const noexcept override {
     return XB_BaseItem::XB_ItemType::Device;
   }
+
+private:
+  // General
+  ComponentInstance*           mCompInstance;
+  const Device*       mLibDevice;
+  const Package*      mLibPackage;
+  const Footprint*    mLibFootprint;
+  QScopedPointer<XB_Footprint> mFootprint;
 };
 
 } // namespace x_version

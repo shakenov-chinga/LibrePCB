@@ -5,7 +5,7 @@ namespace librepcb {
 namespace x_version {
 
 XBG_Path::XBG_Path(GraphicsScene* parent)
-  : XBG_BaseItem(parent) {
+  : XG_IF_BaseItem(parent) {
 }
 
 XBG_Path::~XBG_Path() {

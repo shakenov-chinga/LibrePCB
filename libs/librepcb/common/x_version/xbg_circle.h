@@ -3,7 +3,7 @@
 
 #include <librepcb/common/units/all_length_units.h>
 
-#include "xbg_baseitem.h"
+#include "xg_if_baseitem.h"
 #include "xb_circle.h"
 
 #include <QtCore>
@@ -13,7 +13,7 @@ namespace librepcb {
 
 namespace x_version {
 
-class XBG_Circle : public XBG_BaseItem, QGraphicsItem {
+class XBG_Circle : public QGraphicsItem, XG_IF_BaseItem {
 public:
   XBG_Circle()                        = delete;
   XBG_Circle(const XBG_Circle& other) = delete;
